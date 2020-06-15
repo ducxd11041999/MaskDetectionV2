@@ -8,10 +8,10 @@ from flask import Flask, request, render_template, redirect, url_for, send_from_
 from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 from lib.upload_file import uploadfile
-
+import base64
 
 app = Flask(__name__)
-CORS(app, allow_headers='Content-Type', CORS_SEND_WILDCARD=True)
+CORS(app)
 app.config['SECRET_KEY'] = 'hard to guess string'
 app.config['UPLOAD_FOLDER'] = 'data/'
 app.config['THUMBNAIL_FOLDER'] = 'data/thumbnail/'
@@ -55,7 +55,26 @@ def create_thumbnail(image):
         print (traceback.format_exc())
         return False
 
-
+@app.route('/json', methods=['POST', 'GET'])
+def login():
+    error = None
+    if request.method == 'POST':
+        req = request.get_json()
+        #print('req' , (req["img"]))
+        img_data = (req["img"])
+        f = open("data.txt", "w")
+        f.write(str(img_data))
+        f.close()
+        fw = open("imageToSave.png", "w")
+        fw.write(str(img_data))
+        fw.close()
+        #with open("imageToSave.png", "wb") as fw:
+            #fw.write(base64.encodebytes(d) ####write imgae
+    else:
+        error = 'Invalid username/password'
+    # the code below is executed if the request method
+    # was GET or the credentials were invalid
+    return render_template('index.html', error=error)
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -116,6 +135,27 @@ def upload_file():
             response.headers['Content-Transfer-Encoding']='base64'
             return response 
     return render_template('upload.html')
+
+@app.route('/upload1', methods=['GET', 'POST'])
+def upload_file1():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            #flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            #flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('upload_file',
+                                    filename=filename))
+    return None
+
 @app.route("/delete/<string:filename>", methods=['DELETE'])
 def delete(filename):
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)

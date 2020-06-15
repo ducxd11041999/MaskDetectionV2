@@ -8,15 +8,13 @@ export default function callApi(endpoint, method = 'GET', body){
 
     headers.append('Access-Control-Allow-Origin', 'http://localhost:5000');
     headers.append('Access-Control-Allow-Credentials', 'true');
-    headers.append('GET', 'POST', 'OPTIONS');
+    //headers.append('GET', 'POST', 'OPTIONS');
     try{
         return axios({
                     method: method,
                     url: `${config.API_URL}/${endpoint}`,
                     data: body,
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                      }
+                    headers: headers
                 }).catch(err =>{
                     console.log(err);
             });
