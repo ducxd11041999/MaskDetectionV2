@@ -1,6 +1,8 @@
 import os,io
+from subprocess import Popen, PIPE
 import PIL
 from PIL import Image
+from io import BytesIO
 import simplejson
 import traceback
 from flask_cors import CORS, cross_origin
@@ -11,7 +13,7 @@ from lib.upload_file import uploadfile
 import base64
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources=r'/api/*')
 app.config['SECRET_KEY'] = 'hard to guess string'
 app.config['UPLOAD_FOLDER'] = 'data/'
 app.config['THUMBNAIL_FOLDER'] = 'data/thumbnail/'
@@ -55,26 +57,39 @@ def create_thumbnail(image):
         print (traceback.format_exc())
         return False
 
+@app.route('/run/<command>')
+def run(command):
+    out = os.popen(command).read()
+    print(type(command))
+    print(command)
+    return (out)
+
 @app.route('/json', methods=['POST', 'GET'])
-def login():
-    error = None
+@cross_origin()
+def img():
     if request.method == 'POST':
         req = request.get_json()
         #print('req' , (req["img"]))
-        img_data = (req["img"])
+        img_data = (req["img"]) #str
+        #print(base64_message)
         f = open("data.txt", "w")
         f.write(str(img_data))
         f.close()
-        fw = open("imageToSave.png", "w")
-        fw.write(str(img_data))
-        fw.close()
-        #with open("imageToSave.png", "wb") as fw:
-            #fw.write(base64.encodebytes(d) ####write imgae
-    else:
-        error = 'Invalid username/password'
-    # the code below is executed if the request method
-    # was GET or the credentials were invalid
-    return render_template('index.html', error=error)
+        starter = img_data.find(',')
+        image_data = img_data[starter+1:]
+        image_data = bytes(image_data, encoding="ascii")
+        im = Image.open(BytesIO(base64.b64decode(image_data)))
+        rgb_im = im.convert('RGB')
+        rgb_im.save('../detectModules/screen/image.jpg')
+        process = Popen(['python', 'detect_mask_image.py', '-i', './screen/image.jpg'], stdout=PIPE, stderr=PIPE,  cwd="../detectModules")
+        stdout, stderr = process.communicate()
+        print(stdout)
+        #os.popen(["cd", ".."])
+        #print (os.popen("pwd"))
+        #os.popen("cd detectModules")
+        #os.popen("python detect_mask_image.py -i C:\\Users\\17520\\Desktop\\ProjectDetectMask\\serverFlask\\image.jpg")
+        
+    return render_template('index.html')
 @app.route("/upload", methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -177,7 +192,6 @@ def delete(filename):
 @app.route("/thumbnail/<string:filename>", methods=['GET'])
 def get_thumbnail(filename):
     return send_from_directory(app.config['THUMBNAIL_FOLDER'], filename=filename)
-
 
 @app.route("/data/<string:filename>", methods=['GET'])
 def get_file(filename):
