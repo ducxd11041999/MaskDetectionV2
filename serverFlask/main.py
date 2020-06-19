@@ -1,4 +1,11 @@
-import os,io
+import os,io,sys
+
+path_dir = os.path.dirname(os.path.abspath(__file__)) + '\..'
+print(path_dir)
+detect_mask_module_path = path_dir + '\detectModules'
+models_path = detect_mask_module_path + '\mask_detector.model'
+sys.path.append(path_dir)
+
 from subprocess import Popen, PIPE
 import PIL
 from PIL import Image
@@ -11,9 +18,9 @@ from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 from lib.upload_file import uploadfile
 import base64
-
+import detectModules.detect_mask_image as detect_mask_image
 app = Flask(__name__)
-CORS(app, resources=r'/api/*')
+CORS(app)
 app.config['SECRET_KEY'] = 'hard to guess string'
 app.config['UPLOAD_FOLDER'] = 'data/'
 app.config['THUMBNAIL_FOLDER'] = 'data/thumbnail/'
@@ -24,6 +31,11 @@ IGNORED_FILES = set(['.gitignore'])
 
 bootstrap = Bootstrap(app)
 
+global graph,model, net
+prototxtPath = os.path.sep.join([detect_mask_module_path, 'face_detector', "deploy.prototxt"])
+weightsPath = os.path.sep.join([detect_mask_module_path, 'face_detector',
+    "res10_300x300_ssd_iter_140000.caffemodel"])
+graph, sess, model, net = detect_mask_image.load_model(models_path, prototxtPath, weightsPath)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -81,13 +93,12 @@ def img():
         im = Image.open(BytesIO(base64.b64decode(image_data)))
         rgb_im = im.convert('RGB')
         rgb_im.save('../detectModules/screen/image.jpg')
-        process = Popen(['python', 'detect_mask_image.py', '-i', './screen/image.jpg'], stdout=PIPE, stderr=PIPE,  cwd="../detectModules")
-        stdout, stderr = process.communicate()
-        print(stdout)
-        #os.popen(["cd", ".."])
-        #print (os.popen("pwd"))
-        #os.popen("cd detectModules")
-        #os.popen("python detect_mask_image.py -i C:\\Users\\17520\\Desktop\\ProjectDetectMask\\serverFlask\\image.jpg")
+        image = detect_mask_image.run(graph, sess, model, net ,os.path.abspath('../detectModules/screen/image.jpg'), show_output=True)
+        #process = Popen(['python', 'detect_mask_image.py', '-i', './screen/image.jpg'], stdout=PIPE, stderr=PIPE,  cwd="../detectModules")
+        #stdout, stderr = process.communicate()
+        #print(stdout)
+    else:
+        print("NOT POST")
         
     return render_template('index.html')
 @app.route("/upload", methods=['GET', 'POST'])
