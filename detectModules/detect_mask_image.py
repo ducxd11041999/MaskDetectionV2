@@ -57,7 +57,7 @@ def run(graph, model, net, image_path, confidence=0.5, show_output = True):
 		if confidence_result > confidence:
 			# compute the (x, y)-coordinates of the bounding box for
 			# the object
-			print("OK")
+			#print("OK")
 			box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
 			(startX, startY, endX, endY) = box.astype("int")
 
@@ -122,5 +122,5 @@ if __name__ == "__main__":
 		"res10_300x300_ssd_iter_140000.caffemodel"])
 	print(args["image"])
 	grap, model, net = load_model(args["model"], prototxtPath, weightsPath)
-	run(grap ,model, net, args["image"], True)
+	run(grap ,model, net, args["image"],0.5,True)
 	
