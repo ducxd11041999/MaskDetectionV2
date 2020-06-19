@@ -17,6 +17,7 @@ global sess
 global graph
 
 def load_model(model_path , prototxtPath , weightsPath):
+	print("Load model")
 	graph = tf.get_default_graph()
 	sess = tf.Session(graph=graph)
 	with sess.graph.as_default():
@@ -26,7 +27,6 @@ def load_model(model_path , prototxtPath , weightsPath):
 		# weightsPath = os.path.sep.join([args["face"],
 		# 	"res10_300x300_ssd_iter_140000.caffemodel"])
 		net = cv2.dnn.readNet(prototxtPath, weightsPath)
-
 		# load the face mask detector model from disk
 		print("[INFO] loading face mask detector model...")
 		model = keras_models.load_model(model_path)
