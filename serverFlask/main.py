@@ -28,7 +28,7 @@ global graph,model, net
 prototxtPath = os.path.sep.join([detect_mask_module_path, 'face_detector', "deploy.prototxt"])
 weightsPath = os.path.sep.join([detect_mask_module_path, 'face_detector',
     "res10_300x300_ssd_iter_140000.caffemodel"])
-graph, sess, model, net = detect_mask_image.load_model(models_path, prototxtPath, weightsPath)
+graph, model, net = detect_mask_image.load_model(models_path, prototxtPath, weightsPath)
 
 @app.route('/run/<command>')
 def run(command):
@@ -54,7 +54,7 @@ def img():
         im = Image.open(BytesIO(base64.b64decode(image_data)))
         rgb_im = im.convert('RGB')
         rgb_im.save('../detectModules/screen/image.jpg')
-        image = detect_mask_image.run(graph, sess, model, net ,os.path.abspath('../detectModules/screen/image.jpg'), show_output=True)
+        image = detect_mask_image.run(graph, model, net ,os.path.abspath('../detectModules/screen/image.jpg'), show_output=True)
         #process = Popen(['python', 'detect_mask_image.py', '-i', './screen/image.jpg'], stdout=PIPE, stderr=PIPE,  cwd="../detectModules")
         #stdout, stderr = process.communicate()
         #print(stdout)
