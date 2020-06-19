@@ -6,6 +6,7 @@ detect_mask_module_path = path_dir + '\detectModules'
 models_path = detect_mask_module_path + '\mask_detector.model'
 sys.path.append(path_dir)
 
+import tensorflow as tf
 from subprocess import Popen, PIPE
 from PIL import Image
 from io import BytesIO
@@ -24,11 +25,12 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['txt', 'gif', 'png', 'jpg', 'jpeg', 'bmp', 'rar', 'zip', '7zip', 'doc', 'docx'])
 IGNORED_FILES = set(['.gitignore'])
 
-global graph,model, net
+global graph,model, net, sess
 prototxtPath = os.path.sep.join([detect_mask_module_path, 'face_detector', "deploy.prototxt"])
 weightsPath = os.path.sep.join([detect_mask_module_path, 'face_detector',
     "res10_300x300_ssd_iter_140000.caffemodel"])
-graph, model, net = detect_mask_image.load_model(models_path, prototxtPath, weightsPath)
+print(models_path, prototxtPath, weightsPath )
+graph, sess, model, net = detect_mask_image.load_model(models_path, prototxtPath, weightsPath)
 
 @app.route('/run/<command>')
 def run(command):
@@ -37,6 +39,10 @@ def run(command):
     print(command)
     return (out)
 
+@app.route('/runn', methods=['GET'])
+def handle():
+    detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/avt.jpg'), 0.5, show_output=True)
+     
 @app.route('/json', methods=['POST', 'GET'])
 @cross_origin()
 def img():
@@ -54,7 +60,7 @@ def img():
         im = Image.open(BytesIO(base64.b64decode(image_data)))
         rgb_im = im.convert('RGB')
         rgb_im.save('../detectModules/screen/image.jpg')
-        image = detect_mask_image.run(graph, model, net ,os.path.abspath('..\detectModules\screen\image.jpg'),0.5, show_output=True)
+        image = detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/avt.jpg'), 0.5, show_output=True)
         #process = Popen(['python', 'detect_mask_image.py', '-i', './screen/image.jpg'], stdout=PIPE, stderr=PIPE,  cwd="../detectModules")
         #stdout, stderr = process.communicate()
         #print(stdout)

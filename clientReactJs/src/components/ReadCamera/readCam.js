@@ -9,6 +9,7 @@ const WebcamCapture = () => {
     const capture = React.useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
+    console.log(imageSrc)
     var json = (`{ "img": ${JSON.stringify(imageSrc)}}`);
     var body = JSON.parse(json)
     callApi('/json', 'POST', body).then(res => {
