@@ -32,7 +32,7 @@ def load_model(model_path , prototxtPath , weightsPath):
 		model = keras_models.load_model(model_path)
 	return graph, sess, model, net
 
-def run(graph,sess,  model, net, image_path, confidence=0.5, show_output = True):
+def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True):
 	# load the input image from disk, clone it, and grab the image spatial
 	# dimensions
 	with sess.graph.as_default():
