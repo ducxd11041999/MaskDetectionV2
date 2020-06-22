@@ -20,6 +20,7 @@ def load_model(model_path , prototxtPath , weightsPath):
 	print("Load model")
 	graph = tf.get_default_graph()
 	sess = tf.Session(graph=graph)
+	set_session(sess)
 	with sess.graph.as_default():
 		# load our serialized face detector model from disk
 		print("[INFO] loading face detector model...")

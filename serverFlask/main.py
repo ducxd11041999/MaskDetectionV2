@@ -60,7 +60,7 @@ def img():
         im = Image.open(BytesIO(base64.b64decode(image_data)))
         rgb_im = im.convert('RGB')
         rgb_im.save('../detectModules/screen/image.jpg')
-        image = detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/avt.jpg'), 0.5, show_output=True)
+        image = detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/screen/image.jpg'), 0.5, show_output=True)
         #process = Popen(['python', 'detect_mask_image.py', '-i', './screen/image.jpg'], stdout=PIPE, stderr=PIPE,  cwd="../detectModules")
         #stdout, stderr = process.communicate()
         #print(stdout)
