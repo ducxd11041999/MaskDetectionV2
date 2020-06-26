@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import AlertDialogSlide from './../Dialog/index';
-import Button from '@material-ui/core/Button';
+//import Button from '@material-ui/core/Button';
 class Notification extends Component {
     constructor(props){
         super(props);
@@ -20,20 +20,6 @@ class Notification extends Component {
             userClick: ''
         }
     } 
-    showNotifications = () =>{
-        //console.log("ok");
-        this.setState({
-            open: true,
-            id : 2
-        })
-    }
-    showWarning = () =>{
-        //console.log("ok");
-        this.setState({
-            open: true,
-            id : 1
-        })
-    }
     handleClose = (params) => {
         this.setState({
             open: false,
@@ -58,16 +44,24 @@ class Notification extends Component {
         })
         return result;
     }
+    componentWillReceiveProps = (props) =>{
+        if(props.mask){
+            this.setState({
+                open: true,
+                id : 2
+            })
+        }else{
+            this.setState({
+                open: true,
+                id : 1
+            })
+        }
+    }
     render (){
         var {log, id} = this.state
+        //const {mask} = this.props
         return (
             <div>
-              <Button variant="outlined" color="primary" onClick={this.showNotifications} >
-                    Show Notifications
-              </Button>
-              <Button variant="outlined" color="secondary" onClick={this.showWarning} >
-                    Show Warning
-              </Button>
               {this.showLog(log, id)}
             </div>
         );

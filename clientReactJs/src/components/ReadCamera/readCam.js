@@ -17,14 +17,15 @@ function WebcamCapture(props) {
     const webcamRef = React.useRef(null);
     const [imgSrc, setImgSrc] = React.useState(null);
     const {onCap} = props;
+    
     const capture = React.useCallback(() => {
-      const imageSrc = webcamRef.current.getScreenshot();
-      setImgSrc(imageSrc);
-      var json = (`{ "img": ${JSON.stringify(imageSrc)}}`);
-      var body = JSON.parse(json)
-      callApi('/json', 'POST', body).then(res => {
-        onCap(res.data)
-      })
+        const imageSrc = webcamRef.current.getScreenshot();
+        setImgSrc(imageSrc);
+        var json = (`{ "img": ${JSON.stringify(imageSrc)}}`);
+        var body = JSON.parse(json)
+        callApi('/json', 'POST', body).then(res => {
+          onCap(res.data)
+        })
     }, [webcamRef, onCap]);
 
     // useEffect(() => {
