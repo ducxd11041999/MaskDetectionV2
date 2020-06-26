@@ -1,11 +1,12 @@
 import os,io,sys
+from markupsafe import escape
 
 path_dir = os.path.dirname(os.path.abspath(__file__)) + '\..'
 print(path_dir)
 detect_mask_module_path = path_dir + '\detectModules'
 models_path = detect_mask_module_path + '\mask_detector.model'
 sys.path.append(path_dir)
-
+import numpy as np
 import tensorflow as tf
 from subprocess import Popen, PIPE
 from PIL import Image
@@ -25,7 +26,7 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['txt', 'gif', 'png', 'jpg', 'jpeg', 'bmp', 'rar', 'zip', '7zip', 'doc', 'docx'])
 IGNORED_FILES = set(['.gitignore'])
 
-global graph,model, net, sess
+global graph,model, net, sess , result
 prototxtPath = os.path.sep.join([detect_mask_module_path, 'face_detector', "deploy.prototxt"])
 weightsPath = os.path.sep.join([detect_mask_module_path, 'face_detector',
     "res10_300x300_ssd_iter_140000.caffemodel"])
@@ -60,13 +61,42 @@ def img():
         im = Image.open(BytesIO(base64.b64decode(image_data)))
         rgb_im = im.convert('RGB')
         rgb_im.save('../detectModules/screen/image.jpg')
-        image = detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/screen/image.jpg'), 0.5, show_output=True)
-        #process = Popen(['python', 'detect_mask_image.py', '-i', './screen/image.jpg'], stdout=PIPE, stderr=PIPE,  cwd="../detectModules")
-        #stdout, stderr = process.communicate()
-        #print(stdout)
+        image, result = detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/screen/image.jpg'), 0.5, show_output=False)
+        #print((image))
+        if(image is not None):
+            # print("OK")
+            # img_w, img_h = 200, 200
+            # data = np.zeros((img_h, img_w, 3), dtype=np.uint8)
+            # data[100, 100] = [255, 0, 0]
+            img = np.array(image)
+            mean = 0
+            # var = 0.1
+            # sigma = var**0.5
+            gauss = np.random.normal(mean, 1, img.shape)
+            # normalize image to range [0,255]
+            noisy = img + gauss
+            minv = np.amin(noisy)
+            maxv = np.amax(noisy)
+            noisy = (255 * (noisy - minv) / (maxv - minv)).astype(np.uint8)
+            im = Image.fromarray(noisy,"RGB")
+            im.save('./Output/test.png')
+            # data = {
+            #     "result" : result,
+            # }
+            if(result):
+                #Have mask
+                print("Have Mask")
+                #return result
+            else:
+                #No Mask
+                print("No Mask")
+                #return result
+            return escape(result) 
+        else:
+            print("Not file return")
     else:
         print("NOT POST")     
-    return render_template('index.html')
+    return render_template('index.html', status = result)
 
 if __name__ == '__main__':
     app.run(debug=True)

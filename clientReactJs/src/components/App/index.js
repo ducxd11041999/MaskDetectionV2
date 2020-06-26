@@ -9,13 +9,19 @@ import theme from './../../commons/theme'
 import ReadCamera from './../ReadCamera/index'
 
 class App extends Component{
+  onCap = (param) =>{
+    console.log(param)
+  }
   render(){
     const {classes} = this.props;
     return (
       <ThemeProvider theme = {theme}>
         <div className = {classes.shape}>
           {/* <Notification/>  */}
-           <ReadCamera />
+           <
+            ReadCamera 
+            onCap = {this.onCap}
+          />
           {/* <Stream />  */}
         </div>
       </ThemeProvider>

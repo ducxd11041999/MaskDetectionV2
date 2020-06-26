@@ -1,6 +1,5 @@
 # USAGE
 # python detect_mask_image.py --image examples/example_01.png
-
 # import the necessary packages
 import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
@@ -12,9 +11,9 @@ import argparse
 import cv2
 import os
 
-
 global graph
 global sess
+global result, image
 
 def load_model(model_path , prototxtPath , weightsPath):
 	print("Load model")
@@ -49,6 +48,7 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True)
 		net.setInput(blob)
 		detections = net.forward()
 		# loop over the detections
+		#result = False
 		for i in range(0, detections.shape[2]):
 			# extract the confidence (i.e., probability) associated with
 			# the detection
@@ -57,6 +57,7 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True)
 			#print(type(confidence))
 			# filter out weak detections by ensuring the confidence is
 			# greater than the minimum confidence
+			#print(confidence_result)
 			if confidence_result > confidence:
 				# compute the (x, y)-coordinates of the bounding box for
 				# the object
@@ -68,7 +69,7 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True)
 				# the frame
 				(startX, startY) = (max(0, startX), max(0, startY))
 				(endX, endY) = (min(w - 1, endX), min(h - 1, endY))
-				#print("debug")
+				print("debug")
 
 				# extract the face ROI, convert it from BGR to RGB channel
 				# ordering, resize it to 224x224, and preprocess it
@@ -83,15 +84,18 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True)
 				# pass the face through the model to determine if the face
 				# has a mask or not
 				(mask, withoutMask) = model.predict(face)[0]
-
 				# determine the class label and color we'll use to draw
 				# the bounding box and text
 				label = "Mask" if mask > withoutMask else "No Mask"
 				color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
 				if mask > withoutMask:
-					print("Mask ", mask); 
+					#print("Mask ", mask); 
+					result = True
+					break
 				else:
-					print("No mask", withoutMask)
+					#print("No mask", withoutMask)
+					result = False
+					break
 				# include the probability in the label
 				label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
 
@@ -100,11 +104,13 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True)
 				cv2.putText(image, label, (startX, startY - 10),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 				cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
+			else:
+				result = False
 		if(show_output == True):
 			# show the output image
 			cv2.imshow("Output", image)
 			cv2.waitKey(0)
-		return image
+		return image, result
 
 if __name__ == "__main__":
 	# construct the argument parser and parse the arguments

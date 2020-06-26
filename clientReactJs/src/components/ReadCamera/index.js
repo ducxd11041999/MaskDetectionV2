@@ -4,10 +4,10 @@ import styles from './Style'
 import WebcamCapture from './readCam'
 class ReadCamera extends  Component{
    render(){
-    const {classes} = this.props;
+    const {classes, onCap} = this.props;
      return(
       <div className = {classes.root}>
-          <WebcamCapture /> 
+          <WebcamCapture onCap = {onCap}/> 
       </div>
      )
    }
