@@ -6,26 +6,20 @@ class Notification extends Component {
         super(props);
         this.state = {
             id: '',
-            open: false,
             log:[{
                 id: 1,
-                title: "Cảnh Báo",
+                title: " Cảnh báo ",
                 content : "Bạn vui lòng đeo khẩu trang trước khi vào cửa"
             },{
                 id: 2,
-                title: "Thông báo",
+                title: " Thông báo ",
                 content : "Hệ thống nhận diện bạn đã có khẩu trang vui lòng thực hiện bước tiếp theo"
-        }
-        ],
-            userClick: ''
+            }
+        ]
         }
     } 
     handleClose = (params) => {
-        this.setState({
-            open: false,
-            userClick: params
-        })
-        console.log(params)
+        this.props.onClickNext(true)
     };  
     showLog = (logs, type) =>{
         var result;
@@ -33,7 +27,8 @@ class Notification extends Component {
             if(log.id === type)
                 {
                     return (
-                        <AlertDialogSlide key = {index} open = {this.state.open} 
+                        <AlertDialogSlide key = {index}
+                        open = {this.props.openLog} 
                         handleClose = {this.handleClose}
                         log = {log}
                         />
@@ -44,25 +39,24 @@ class Notification extends Component {
         })
         return result;
     }
-    componentWillReceiveProps = (props) =>{
-        if(props.mask){
-            this.setState({
-                open: true,
-                id : 2
-            })
-        }else{
-            this.setState({
-                open: true,
-                id : 1
-            })
+    UNSAFE_componentWillReceiveProps = (props) =>{
+        if(props){
+            if(props.mask){
+                this.setState({
+                    id : 2,
+                })
+            }else{
+                this.setState({
+                    id : 1,
+                })
+            }
         }
     }
     render (){
         var {log, id} = this.state
-        //const {mask} = this.props
         return (
             <div>
-              {this.showLog(log, id)}
+                {this.showLog(log, id)}
             </div>
         );
     }

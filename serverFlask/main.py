@@ -1,6 +1,5 @@
 import os,io,sys
 from markupsafe import escape
-
 path_dir = os.path.dirname(os.path.abspath(__file__)) + '\..'
 print(path_dir)
 detect_mask_module_path = path_dir + '\detectModules'
@@ -46,7 +45,7 @@ def handle():
      
 @app.route('/json', methods=['POST', 'GET'])
 @cross_origin()
-def img():
+def img_upload():
     if request.method == 'POST':
         req = request.get_json()
         #print('req' , (req["img"]))
@@ -97,6 +96,9 @@ def img():
     else:
         print("NOT POST")     
     return render_template('index.html', status = result)
-
+@app.route('/usr_info', methods=['POST', 'GET'])
+@cross_origin()
+def info_upload():
+    return 'Hello Update Information'
 if __name__ == '__main__':
     app.run(debug=True)

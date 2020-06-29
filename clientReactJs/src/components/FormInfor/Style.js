@@ -1,18 +1,17 @@
-
 const styles = () => ({
-    warnning: {
+    content: {
         display : "flex",
         alignItem:  "center",
-        backgroundColor : "orange"
+        backgroundColor : "yellow",
+        paddingLeft: "5px"
     },
-    notification: {
+    titile:{
         display : "flex",
         alignItem:  "center",
-        backgroundColor : "#81c784"
     },
-    icon:{
-        padding : "0px",
-        margin : "-3px",
+    formSize:{
+        fontSize: "20px",
+        textAlign: "center"
     }
 })
 export default styles

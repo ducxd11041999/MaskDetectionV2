@@ -7,37 +7,79 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './../../commons/theme'
 //import Stream from './../StreamVideo/index'
 import ReadCamera from './../ReadCamera/index'
+import FormDialog from './../FormInfor/index'
+import callApi from './../../utils/Call_api'
 class App extends Component{
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();
     this.state = {
-         mask: false
+    mask: false,
+    displayForm: false,
+    openLog: true
     };
   }
   onCap = (param) =>{
+    // recive status mask
     var par  = param === 'True'? true: false;
     console.log(typeof par)
     this.setState({
       mask: par,
+      openLog: true
     }) 
   }
-  // onRenderNotifications = () =>{
-  //     return <Notification />
-  // }
+  onClickNext = (param) =>{
+    // click Ok from dialog
+      if(this.state.mask){
+        if(param){
+          this.setState({
+            displayForm: true,
+            openLog: false
+          })
+        }
+        else{
+          this.setState({
+            displayForm: false,
+            openLog: false
+          })
+        }
+      }
+      else{
+        this.setState({
+          displayForm: false,
+          openLog: false
+        })
+      }
+  }
+  onInformation = (param) =>{
+    // recive data from form
+    console.log(param)
+    if(param){
+    callApi('/usr_info', 'POST', param).then(res => {
+        console.log(res)
+    })
+  }
+
+  }
+  onCloseForm = () =>{
+    this.setState({
+      displayForm: false
+    })
+  }
   render(){
-    const {classes} = this.props;
     const {mask} = this.state
+    let {classes} = this.props
     return (
       <ThemeProvider theme = {theme}>
-        <div className = {classes.shape} ref={this.wrapper}>
+        <div className = {classes.noCroll} ref={this.wrapper}>
           <div>
-           <Notification mask = {mask}/>
-           <ReadCamera 
-            onCap = {this.onCap}
-          />
+            <Notification mask = {mask} openLog = {this.state.openLog} onClickNext= {this.onClickNext} 
+            />
+            <FormDialog onInformation = {this.onInformation} 
+              openForm = {this.state.displayForm}
+              onCloseForm = {this.onCloseForm}/>
+            <ReadCamera onCap = {this.onCap}/>
           </div>
-          {/* <Stream />  */}
         </div>
       </ThemeProvider>
     );
