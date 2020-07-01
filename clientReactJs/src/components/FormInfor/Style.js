@@ -10,8 +10,15 @@ const styles = () => ({
         alignItem:  "center",
     },
     formSize:{
-        fontSize: "20px",
+        fontSize: "30px",
         textAlign: "center"
-    }
+    },
+    formTitleSize:{
+        fontSize: "20px",
+    },
+    formContentSize:{
+        fontSize: "20px",
+        size: "120%"
+    },
 })
 export default styles

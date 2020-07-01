@@ -13,6 +13,18 @@ const styles = () => ({
     icon:{
         padding : "0px",
         margin : "-3px",
+    },
+    zoomContent:{
+        fontSize: "15px",
+        size: "120%"
+    },
+    zoomTitle:{
+        fontSize: "20px",
+    },
+    ejectDoor:{
+        backgroundColor : "red",
+        display : "flex",
+        alignItem:  "center"
     }
 })
 export default styles

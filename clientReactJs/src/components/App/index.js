@@ -11,53 +11,106 @@ import FormDialog from './../FormInfor/index'
 import callApi from './../../utils/Call_api'
 class App extends Component{
   constructor(props) {
-    super(props);
-    this.wrapper = React.createRef();
-    this.state = {
-    mask: false,
-    displayForm: false,
-    openLog: true
+      super(props);
+      this.wrapper = React.createRef();
+      this.state = {
+      mask: false,
+      displayForm: false,
+      openLog: true,
+      isHeath_OK: true, //mặt định user có bệnh
+      step : "0",
+      logId: 0
     };
   }
+
   onCap = (param) =>{
     // recive status mask
+    console.log("Bấm nút chụp")
     var par  = param === 'True'? true: false;
-    console.log(typeof par)
+    if(par){
+      this.setState({
+        mask: par, /// update lai co khau trang khong
+        openLog: true, // mo thong báo
+        step: "1", // chuyển sang bước 1
+        logId: 2 /// Log ra thông báo có khẩu trang
+      })}
+    else{
+      this.setState({
+        mask: par, /// update lai co khau trang khong
+        openLog: true, /// mo thong bao
+        step: "0", /// Chuyển về lại bước 0
+        logId: 1 // log ra warning
+    })}
+    console.log("Update sau chụp", this.state.step)
+  }
+  onClear = () =>{
     this.setState({
-      mask: par,
-      openLog: true
+      mask: false,
+      displayForm: false,
+      openLog: true,
+      isHeath_OK: true,
+      step : "0"
     }) 
   }
   onClickNext = (param) =>{
     // click Ok from dialog
       if(this.state.mask){
+        console.log("click next va co mat na")
         if(param){
+          console.log(this.state.step)
+          if(this.state.step==="1"){
           this.setState({
-            displayForm: true,
-            openLog: false
-          })
-        }
-        else{
-          this.setState({
-            displayForm: false,
-            openLog: false
-          })
-        }
+            displayForm: true, // mo from
+            openLog: false, // dong cac log lai
+            step: "2" // chuyen sang buoc 2
+          })}
+          else if(this.state.step===3){
+            this.setState({
+              displayForm: false,
+              openLog: true,
+              step: "0"
+            })
+          }
+          else{
+            this.setState({
+              displayForm: false,
+              openLog: false,
+              step: "0"
+            })
+          }
       }
-      else{
-        this.setState({
-          displayForm: false,
-          openLog: false
-        })
-      }
+    }else{ // truong hop khong nhận mask
+      this.setState({
+        displayForm: false,
+        openLog: false,
+        step: "0"
+      })
+    }
   }
   onInformation = (param) =>{
     // recive data from form
-    console.log(param)
+    console.log("Form được submit với nội dung sau" , param)
     if(param){
     callApi('/usr_info', 'POST', param).then(res => {
-        console.log(res)
-    })
+        console.log("Server Tra ve ket qua co ho k", res.data)
+        var status = res.data === "True"?true:false;
+        if(status){ // neu phat hien co benh
+        this.setState({
+            isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
+            openLog: true,
+            logId: 4,
+            step: "3" /// chuyển sang bước 3
+        })
+      }else{
+        this.setState({
+          isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
+          openLog: true,
+          logId: 3,
+          step: "3" /// chuyển sang bước 3
+      })
+      }
+      })
+    this.onCloseForm();
   }
 
   }
@@ -67,16 +120,20 @@ class App extends Component{
     })
   }
   render(){
-    const {mask} = this.state
     let {classes} = this.props
     return (
       <ThemeProvider theme = {theme}>
         <div className = {classes.noCroll} ref={this.wrapper}>
           <div>
-            <Notification mask = {mask} openLog = {this.state.openLog} onClickNext= {this.onClickNext} 
+            <Notification openLog = {this.state.openLog}
+                onHeath = {this.state.isHeath_OK}
+                onClickNext= {this.onClickNext} 
+                onStep = {this.state.step}
+                id = {this.state.logId}
             />
             <FormDialog onInformation = {this.onInformation} 
               openForm = {this.state.displayForm}
+              onStep = {this.state.step}
               onCloseForm = {this.onCloseForm}/>
             <ReadCamera onCap = {this.onCap}/>
           </div>

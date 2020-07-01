@@ -10,15 +10,13 @@ import WarningIcon from '@material-ui/icons/Warning'
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { withStyles } from '@material-ui/core';
 import styles from './Style'
+import SmsFailedIcon from '@material-ui/icons/SmsFailed';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 class AlertDialogSlide extends Component {
   Transition = React.forwardRef(function Transition(props, ref){
     return <Slide direction="left" ref={ref} {...props} />;
   });
-  handleClickOpen = () => {
-    this.setState({
-      open : true
-    })
-  };
+
   handleClose = (params) => {
       this.props.handleClose(params);
   };
@@ -26,15 +24,36 @@ class AlertDialogSlide extends Component {
     let {classes} = this.props
       if(id===2){
         return <NotificationsActiveIcon className = {classes.icon} />
-      }else{
+      }else if(id === 1){
         //show warnning
         return <WarningIcon className = {classes.icon}/> 
       }
+      else if(id === 4){
+        return <SmsFailedIcon className = {classes.icon}/>
+      }
+      else{
+          return <CheckCircleOutlineIcon className = {classes.icon}/>
+      }
+  }
+  styleTitle = () =>{
+    var {log, classes} = this.props;
+    var className = ""
+    if(log.id === 1){
+      className = classes.warnning
+    }
+    else if((log.id === 2) || (log.id === 3))
+    {
+      className = classes.notification
+    }
+    else{
+      className = classes.ejectDoor
+    }
+    return className
   }
   render(){
       var {open, log, classes} = this.props;
       //console.log(open)
-      var className = log.id === 1 ? classes.warnning : classes.notification 
+      var className = this.styleTitle()
       var icon = this.showIcon(log.id)
   return (
     <div >
@@ -47,13 +66,13 @@ class AlertDialogSlide extends Component {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title" color = 'secondary' className = {className} >
-            <div>
+            <div className={classes.zoomTitle}>
               {icon}
               {log.title}
             </div>
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
+            <DialogContentText id="alert-dialog-slide-description" >
                 {log.content}
             </DialogContentText>
           </DialogContent>
@@ -67,5 +86,4 @@ class AlertDialogSlide extends Component {
     );
   }
 }
-
 export default withStyles(styles)(AlertDialogSlide)
