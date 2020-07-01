@@ -9,10 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormLabel from '@material-ui/core/FormLabel';
 import { withStyles } from '@material-ui/core';
 import styles from './Style'
-import FormControl from '@material-ui/core/FormControl';
 
 class FormDialog extends Component {
 
@@ -22,7 +20,7 @@ class FormDialog extends Component {
         this.state = {
             open: false,
             name: '',
-            ages: 0,
+            ages: '',
             heath: '',
             gender: false
         };
@@ -31,7 +29,7 @@ class FormDialog extends Component {
         this.setState ({
             open: false,
             name: '',
-            ages: 0,
+            ages: '0',
             heath: '',
             gender: false
         });
@@ -64,66 +62,95 @@ class FormDialog extends Component {
         const {openForm, classes} = this.props
     return (
         <div>
-            <Dialog open={openForm} onClose={this.handleClose}  aria-labelledby="form-dialog-title">
-                <FormControl>
+            <Dialog open={openForm} onClose={this.handleClose}  
+            aria-labelledby="form-dialog-title" 
+            fullWidth = {true}
+            className = {classes.root}>
+                <form className={classes.root} autoComplete="off">
                     <DialogTitle id="form-dialog-title" >
                         <div className={classes.formSize}>
                             Thông tin cá nhân
                         </div>
                     </DialogTitle>
-                    <DialogContent  className = {classes.formContentSize}>
-                        <DialogContentText className = {classes.content}>
+                    <DialogContent>
+                        <DialogContentText className = {classes.formContentSize}>
                             Vui lòng điền thông tin cá nhân của bạn
                         </DialogContentText>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                name="name"
-                                label="Họ & Tên"
-                                type="text"
-                                value = {this.state.name}
-                                fullWidth
-                                onChange = {this.onChange}
-                                required
-                            />
                                 <TextField
+                                    variant = "filled"
+                                    autoFocus
+                                    margin="dense"
+                                    name="name"
+                                    label="Họ & Tên"
+                                    type="text"
+                                    value = {this.state.name}
+                                    fullWidth = {true}
+                                    onChange = {this.onChange}
+                                    inputProps={{
+                                        style: {fontSize: "15px"} 
+                                    }}
+                                    InputLabelProps={{style: {fontSize: "15px"}}} // font size of input label
+                                    required
+                                />
+                                <TextField
+                                    variant = "filled"
                                     autoFocus
                                     margin="dense"
                                     name="ages"
-                                    type="number"
+                                    type="text"
                                     label ="Tuổi"
                                     value = {this.state.ages}
                                     onChange = {this.onChange}
+                                    inputProps={{
+                                        style: {fontSize: "15px"} 
+                                    }}
+                                    InputLabelProps={{style: {fontSize: "15px"}}} // font size of input label
                                     fullWidth
-                                    required 
+                                    required
                                 />
-                        <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender" value={this.state.gender} onChange={this.onChange} required >
-                            <FormControlLabel value= "false" checked ={this.state.gender === "false"}  control={<Radio />} label="Female" />
-                            <FormControlLabel value="true" checked ={this.state.gender === "true"} control={<Radio />} label="Male" />
+                        <RadioGroup aria-label="gender" 
+                            name="gender" value={this.state.gender}
+                            onChange={this.onChange} required
+                            className = {classes.pl10}
+                        >
+                            <FormControlLabel value= "false" 
+                            checked ={this.state.gender === "false"} 
+                                control={<Radio />} 
+                                label={<span style={{ fontSize: '15px' }}>Nữ</span>}
+                            />
+                            <FormControlLabel value="true" 
+                                checked ={this.state.gender === "true"} control={<Radio />} 
+                                label={<span style={{ fontSize: '15px' }}>Nữ</span>} 
+                            />
                         </RadioGroup>
                         <TextField
                             autoFocus
+                            variant = "filled"
                             margin="dense"
                             name="heath"
                             label="Tình trạng sức khỏe"
                             type="text"
+                            inputProps={{
+                                style: {fontSize: "15px"} 
+                            }}
+                            InputLabelProps={{style: {fontSize: "15px"}}} // font size of input label
                             value = {this.state.heath}
                             onChange = {this.onChange}
                             fullWidth
-                            required 
+                            required
+                            className = {classes.txtFileSize}
                         />
                         <br/>
                     </DialogContent>
                     <DialogActions>
-                        <Button type="reset" onClick={this.onClearData} color="primary">
+                        <Button variant = "contained" type="reset" onClick={this.onClearData} color="primary">
                             Cancel
                         </Button>
-                        <Button type="submit" color="secondary"  onClick={e => this.onSubmit(e)}>
+                        <Button variant = "contained" type="submit" color="secondary"  onClick={e => this.onSubmit(e)}>
                             Submit
                         </Button>
                     </DialogActions>
-                    </FormControl>
+                    </form>
             </Dialog>
         </div>
     );

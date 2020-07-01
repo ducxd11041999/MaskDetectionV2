@@ -42,7 +42,7 @@ def run(command):
 @app.route('/runn', methods=['GET'])
 def handle():
     detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/avt.jpg'), 0.5, show_output=True)
-     
+
 @app.route('/json', methods=['POST', 'GET'])
 @cross_origin()
 def img_upload():
@@ -96,12 +96,14 @@ def img_upload():
     else:
         print("NOT POST")     
     return render_template('index.html', status = result)
+
 @app.route('/usr_info', methods=['POST', 'GET'])
 @cross_origin()
 def info_upload():
     if (request.method == 'POST'):
         res = request.get_json()
         heath = res["heath"]
+        #check no data
         if(heath.find("ho")!=-1):
             #print("Co benh")
             return escape(True)
