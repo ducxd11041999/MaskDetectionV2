@@ -99,6 +99,19 @@ def img_upload():
 @app.route('/usr_info', methods=['POST', 'GET'])
 @cross_origin()
 def info_upload():
-    return 'Hello Update Information'
+    if (request.method == 'POST'):
+        res = request.get_json()
+        heath = res["heath"]
+        if(heath.find("ho")!=-1):
+            #print("Co benh")
+            return escape(True)
+        else:
+            #print("Cua da mo khoa")
+            return escape(False)
+    else:
+        return True
+    
+
+
 if __name__ == '__main__':
     app.run(debug=True)

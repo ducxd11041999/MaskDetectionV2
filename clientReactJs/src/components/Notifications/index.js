@@ -14,8 +14,17 @@ class Notification extends Component {
                 id: 2,
                 title: " Thông báo ",
                 content : "Hệ thống nhận diện bạn đã có khẩu trang vui lòng thực hiện bước tiếp theo"
+            },{
+                id: 3,
+                title: " Thành công ",
+                content : "Cửa đã được mở mời bạn vào !!"
+            }, {
+                id: 4,
+                title: " Lỗi ",
+                content : "Hệ thống phát hiện bạn không đủ điều kiện checkin :("
             }
-        ]
+            ],
+            maskCheck: false
         }
     } 
     handleClose = (params) => {
@@ -39,21 +48,10 @@ class Notification extends Component {
         })
         return result;
     }
-    UNSAFE_componentWillReceiveProps = (props) =>{
-        if(props){
-            if(props.mask){
-                this.setState({
-                    id : 2,
-                })
-            }else{
-                this.setState({
-                    id : 1,
-                })
-            }
-        }
-    }
+
     render (){
-        var {log, id} = this.state
+        var {log} = this.state
+        var {id} = this.props
         return (
             <div>
                 {this.showLog(log, id)}
