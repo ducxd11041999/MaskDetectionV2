@@ -1,0 +1,6 @@
+*.txt
+*.png
+*.jpg
+
+detectModules/screen/image.jpg
+serverFlask/Output/test.png

@@ -12,6 +12,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import { withStyles } from '@material-ui/core';
 import styles from './Style'
+import FormControl from '@material-ui/core/FormControl';
+
 class FormDialog extends Component {
 
     constructor(props) {
@@ -19,7 +21,6 @@ class FormDialog extends Component {
         this.wrapper = React.createRef();
         this.state = {
             open: false,
-            id: '',
             name: '',
             ages: 0,
             heath: '',
@@ -27,14 +28,13 @@ class FormDialog extends Component {
         };
     }
     onClearData = () =>{
-        this.setState = {
+        this.setState ({
             open: false,
-            id: '',
             name: '',
             ages: 0,
             heath: '',
             gender: false
-        };
+        });
         this.handleClose();
     }
     handleClose = () => {
@@ -58,45 +58,49 @@ class FormDialog extends Component {
         //console.log("submit")
         event.preventDefault();
         this.props.onInformation(this.state)
-        this.handleClose();
+        this.onClearData();
     }
     render(){
         const {openForm, classes} = this.props
     return (
         <div>
             <Dialog open={openForm} onClose={this.handleClose}  aria-labelledby="form-dialog-title">
-                <form onSubmit = {this.onSubmit} >
-                    <DialogTitle id="form-dialog-title" className={classes.formSize} >
-                        Thông tin cá nhân
+                <FormControl>
+                    <DialogTitle id="form-dialog-title" >
+                        <div className={classes.formSize}>
+                            Thông tin cá nhân
+                        </div>
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent  className = {classes.formContentSize}>
                         <DialogContentText className = {classes.content}>
                             Vui lòng điền thông tin cá nhân của bạn
                         </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            name="name"
-                            label="Họ Tên"
-                            type="text"
-                            value = {this.state.name}
-                            fullWidth
-                            onChange = {this.onChange}
-                        />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            name="ages"
-                            label="Tuổi"
-                            type="number"
-                            value = {this.state.ages}
-                            onChange = {this.onChange}
-                            fullWidth
-                        />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                name="name"
+                                label="Họ & Tên"
+                                type="text"
+                                value = {this.state.name}
+                                fullWidth
+                                onChange = {this.onChange}
+                                required
+                            />
+                                <TextField
+                                    autoFocus
+                                    margin="dense"
+                                    name="ages"
+                                    type="number"
+                                    label ="Tuổi"
+                                    value = {this.state.ages}
+                                    onChange = {this.onChange}
+                                    fullWidth
+                                    required 
+                                />
                         <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender" value={this.state.gender} onChange={this.onChange}>
-                            <FormControlLabel value= {false} checked ={this.state.gender === "false"}  control={<Radio />} label="Female" />
-                            <FormControlLabel value={true} checked ={this.state.gender === "true"} control={<Radio />} label="Male" />
+                        <RadioGroup aria-label="gender" name="gender" value={this.state.gender} onChange={this.onChange} required >
+                            <FormControlLabel value= "false" checked ={this.state.gender === "false"}  control={<Radio />} label="Female" />
+                            <FormControlLabel value="true" checked ={this.state.gender === "true"} control={<Radio />} label="Male" />
                         </RadioGroup>
                         <TextField
                             autoFocus
@@ -107,6 +111,7 @@ class FormDialog extends Component {
                             value = {this.state.heath}
                             onChange = {this.onChange}
                             fullWidth
+                            required 
                         />
                         <br/>
                     </DialogContent>
@@ -114,11 +119,11 @@ class FormDialog extends Component {
                         <Button type="reset" onClick={this.onClearData} color="primary">
                             Cancel
                         </Button>
-                        <Button type="submit" color="secondary">
+                        <Button type="submit" color="secondary"  onClick={e => this.onSubmit(e)}>
                             Submit
                         </Button>
                     </DialogActions>
-                </form>
+                    </FormControl>
             </Dialog>
         </div>
     );
