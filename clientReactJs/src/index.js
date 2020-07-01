@@ -5,9 +5,9 @@ import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <div>
+      <App />
+  </div>,
   document.getElementById('root')
 );
 // If you want your app to work offline and load faster, you can change

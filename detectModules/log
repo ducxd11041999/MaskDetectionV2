@@ -1,0 +1,65 @@
+(env) c:\Users\17520\Desktop\ProjectDetectMask\detectModules>python detect_mask_image.py -i c:\Users\17520\Desktop\ProjectDetectMask\detectModules\screen\image.jpg
+2020-06-19 11:33:57.561442: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudart64_100.dll'; dlerror: cudart64_100.dll not found
+2020-06-19 11:33:57.570072: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+[INFO] loading face detector model...
+[INFO] loading face mask detector model...
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\init_ops.py:97: calling GlorotUniform.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\init_ops.py:97: calling Zeros.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\init_ops.py:97: calling Ones.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\resource_variable_ops.py:1630: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.    
+Instructions for updating:
+If using Keras pass *_constraint arguments to layers.
+2020-06-19 11:34:03.379370: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'nvcuda.dll'; dlerror: nvcuda.dll not found
+2020-06-19 11:34:03.389020: E tensorflow/stream_executor/cuda/cuda_driver.cc:318] failed call to cuInit: UNKNOWN ERROR (303)
+2020-06-19 11:34:03.409419: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: HuuDucXD
+2020-06-19 11:34:03.438012: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: HuuDucXD
+2020-06-19 11:34:03.456508: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports 
+instructions that this TensorFlow binary was not compiled to use: AVX2
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\math_grad.py:1424: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+[INFO] computing face detections...
+
+
+
+(env) c:\Users\17520\Desktop\ProjectDetectMask\detectModules>python detect_mask_image.py -i c:\Users\17520\Desktop\ProjectDetectMask\detectModules\screen\image.jpg
+2020-06-19 11:32:11.416470: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'cudart64_100.dll'; dlerror: cudart64_100.dll not found
+2020-06-19 11:32:11.424762: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+Load model
+WARNING:tensorflow:From detect_mask_image.py:21: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+WARNING:tensorflow:From detect_mask_image.py:22: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+
+2020-06-19 11:32:13.548786: W tensorflow/stream_executor/platform/default/dso_loader.cc:55] Could not load dynamic library 'nvcuda.dll'; dlerror: nvcuda.dll not found
+2020-06-19 11:32:13.565509: E tensorflow/stream_executor/cuda/cuda_driver.cc:318] failed call to cuInit: UNKNOWN ERROR (303)
+2020-06-19 11:32:13.583668: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: HuuDucXD
+2020-06-19 11:32:13.597827: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: HuuDucXD
+2020-06-19 11:32:13.613526: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports 
+instructions that this TensorFlow binary was not compiled to use: AVX2
+[INFO] loading face detector model...
+[INFO] loading face mask detector model...
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\init_ops.py:97: calling GlorotUniform.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\init_ops.py:97: calling Zeros.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\init_ops.py:97: calling Ones.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\resource_variable_ops.py:1630: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.    
+Instructions for updating:
+If using Keras pass *_constraint arguments to layers.
+WARNING:tensorflow:From C:\Users\17520\Desktop\Worker\env\lib\site-packages\tensorflow_core\python\ops\math_grad.py:1424: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+Traceback (most recent call last):
+  File "detect_mask_image.py", line 126, in <module>
+    model, net = load_model(args["model"], prototxtPath, weightsPath)
+ValueError: too many values to unpack (expected 2)
