@@ -16,6 +16,7 @@ from flask import Flask, request, render_template, redirect, url_for, send_from_
 import base64
 import detectModules.detect_mask_image as detect_mask_image
 from db import *
+from pySerialDriver import *
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -27,7 +28,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'gif', 'png', 'jpg', 'jpeg', 'bmp', 'rar', 'zip
 IGNORED_FILES = set(['.gitignore'])
 
 ## Load model
-global graph,model, net, sess , result, conn , covid_result
+global graph,model, net, sess , result, conn , covid_result, serialcomm
 prototxtPath = os.path.sep.join([detect_mask_module_path, 'face_detector', "deploy.prototxt"])
 weightsPath = os.path.sep.join([detect_mask_module_path, 'face_detector',
     "res10_300x300_ssd_iter_140000.caffemodel"])
@@ -41,6 +42,8 @@ drop_tables(conn, "users")
 #create new db users
 create_table_user(conn)
 
+#connect drivers
+serialcomm = setup('COM9', 9600, 1)
 
 @app.route('/run/<command>')
 def run(command):
@@ -112,7 +115,7 @@ def img_upload():
 def info_upload():
     if (request.method == 'POST'):
         res = request.get_json()
-        print(res)
+        #print(res)
         if (res["cough"] or res["headache"] or res["breath"] or res["tangent"] ):
             covid_result = 1
         else:
@@ -123,7 +126,7 @@ def info_upload():
         # save data into database
         data = [name, ages, covid_result, heath_dtls]
         insert_data(conn, data)
-        data_user = view_db(conn, "users")
+        #data_user = view_db(conn, "users")
         #print (data_user)
         #print(data)
         if((name == '')):
@@ -132,9 +135,11 @@ def info_upload():
         #check no data
         if (covid_result == 1):
             #print("Co benh")
+            send_data("c", serialcomm)
             return escape(True)
         else:
             #print("Cua da mo khoa")
+            send_data("o", serialcomm)
             return escape(False)
     else:
         return True
