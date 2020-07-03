@@ -36,7 +36,7 @@ const styles = (theme) => ({
         
     },
     pl10:{
-        paddingLeft : "10px"
+        paddingLeft : "20px",
     },
     
 })

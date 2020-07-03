@@ -15,6 +15,7 @@ from flask_cors import CORS, cross_origin
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory, make_response,send_file,jsonify
 import base64
 import detectModules.detect_mask_image as detect_mask_image
+from db import *
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -25,12 +26,21 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['txt', 'gif', 'png', 'jpg', 'jpeg', 'bmp', 'rar', 'zip', '7zip', 'doc', 'docx'])
 IGNORED_FILES = set(['.gitignore'])
 
-global graph,model, net, sess , result
+## Load model
+global graph,model, net, sess , result, conn , covid_result
 prototxtPath = os.path.sep.join([detect_mask_module_path, 'face_detector', "deploy.prototxt"])
 weightsPath = os.path.sep.join([detect_mask_module_path, 'face_detector',
     "res10_300x300_ssd_iter_140000.caffemodel"])
 print(models_path, prototxtPath, weightsPath )
 graph, sess, model, net = detect_mask_image.load_model(models_path, prototxtPath, weightsPath)
+
+### Connect database
+conn = create_connection()
+#drop all data users
+drop_tables(conn, "users")
+#create new db users
+create_table_user(conn)
+
 
 @app.route('/run/<command>')
 def run(command):
@@ -102,9 +112,25 @@ def img_upload():
 def info_upload():
     if (request.method == 'POST'):
         res = request.get_json()
-        heath = res["heath"]
+        print(res)
+        if (res["cough"] or res["headache"] or res["breath"] or res["tangent"] ):
+            covid_result = 1
+        else:
+            covid_result = 0
+        heath_dtls = res["heath_dtls"]
+        name = res["name"]
+        ages = res["ages"]
+        # save data into database
+        data = [name, ages, covid_result, heath_dtls]
+        insert_data(conn, data)
+        data_user = view_db(conn, "users")
+        #print (data_user)
+        #print(data)
+        if((name == '')):
+            return escape(True) # mac dinh khong mo cua
+        #print(res)
         #check no data
-        if(heath.find("ho")!=-1):
+        if (covid_result == 1):
             #print("Co benh")
             return escape(True)
         else:
@@ -112,8 +138,8 @@ def info_upload():
             return escape(False)
     else:
         return True
-    
+
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host = '0.0.0.0',debug=True)

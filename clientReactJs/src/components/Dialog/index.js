@@ -73,10 +73,8 @@ class AlertDialogSlide extends Component {
             </div>
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description" >
-            <div className={classes.zoomContent}>
-                {log.content}
-            </div>
+            <DialogContentText className={classes.zoomContent} id="alert-dialog-slide-description" >
+                  {log.content}
             </DialogContentText>
           </DialogContent>
           <DialogActions>

@@ -11,6 +11,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { withStyles } from '@material-ui/core';
 import styles from './Style'
+import Checkbox from '@material-ui/core/Checkbox';
 
 class FormDialog extends Component {
 
@@ -21,8 +22,12 @@ class FormDialog extends Component {
             open: false,
             name: '',
             ages: '',
-            heath: '',
-            gender: false
+            heath_dtls: '',
+            gender: false,
+            cough: false,
+            headache: false,
+            breath: false,
+            tangent: false
         };
     }
     onClearData = () =>{
@@ -30,8 +35,12 @@ class FormDialog extends Component {
             open: false,
             name: '',
             ages: '0',
-            heath: '',
-            gender: false
+            heath_dtls: '',
+            gender: false,
+            cough: false,
+            headache: false,
+            breath: false,
+            tangent: false
         });
         this.handleClose();
     }
@@ -43,7 +52,9 @@ class FormDialog extends Component {
         var target = event.target
         var name = target.name
         var value = target.value
-        if (name ==='status')
+        //console.log(name + " " + value)
+        //console.log(typeof value)
+        if (name ==='cough' || name === 'breath' || name === 'headache' || name === 'tangent')
         {
             value = (value === "true" ? true : false);
         }
@@ -108,27 +119,76 @@ class FormDialog extends Component {
                                     fullWidth
                                     required
                                 />
+                        <span className = {classes.pl10} style={{ fontSize: '15px', color : "red" }}>Giới tính</span>
+                        <br />
                         <RadioGroup aria-label="gender" 
                             name="gender" value={this.state.gender}
-                            onChange={this.onChange} required
+                            onChange={this.onChange} 
+                            required
                             className = {classes.pl10}
                         >
                             <FormControlLabel value= "false" 
-                            checked ={this.state.gender === "false"} 
+                                checked ={this.state.gender === "false"} 
                                 control={<Radio />} 
                                 label={<span style={{ fontSize: '15px' }}>Nữ</span>}
                             />
                             <FormControlLabel value="true" 
                                 checked ={this.state.gender === "true"} control={<Radio />} 
-                                label={<span style={{ fontSize: '15px' }}>Nữ</span>} 
+                                label={<span style={{ fontSize: '15px' }}>Nam</span>} 
                             />
                         </RadioGroup>
+                        <br />
+                        <span className = {classes.pl10} style={{ fontSize: '15px', color : "red" }}>Bạn có các triệu chứng sau?</span>
+                        <br />
+                        <br />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="cough" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.cough}
+                            label={<span style={{ fontSize: '15px' }}>Ho</span>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="headache" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.headache}
+                            label={<span style={{ fontSize: '15px' }}>Nhứt đầu</span>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="breath" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.breath}
+                            label={<span style={{ fontSize: '15px' }}>Khó thở</span>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="tangent" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.tangent}
+                            label={<span style={{ fontSize: '15px' }}>Tiếp xúc với bệnh nhân</span>}
+                        />
+                        <br />
+                        <br />
                         <TextField
                             autoFocus
                             variant = "filled"
                             margin="dense"
-                            name="heath"
-                            label="Tình trạng sức khỏe"
+                            name="heath_dtls"
+                            label="Mô tả chi tiết (không bắt buộc)"
                             type="text"
                             inputProps={{
                                 style: {fontSize: "15px"} 

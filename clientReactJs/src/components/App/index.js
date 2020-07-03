@@ -89,10 +89,10 @@ class App extends Component{
   }
   onInformation = (param) =>{
     // recive data from form
-    console.log("Form được submit với nội dung sau" , param)
+    //console.log("Form được submit với nội dung sau" , param)
     if(param){
     callApi('/usr_info', 'POST', param).then(res => {
-        console.log("Server Tra ve ket qua co ho k", res.data)
+        console.log("From server COVID_RESULT :", res.data)
         var status = res.data === "True"?true:false;
         if(status){ // neu phat hien co benh
         this.setState({
