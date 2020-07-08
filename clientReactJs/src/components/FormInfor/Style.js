@@ -12,7 +12,7 @@ const styles = (theme) => ({
     formSize:{
         fontSize: "30px",
         textAlign: "center",
-        backgroundColor: "green"
+        backgroundColor: "#14e557"
     },
     formTitleSize:{
         fontSize: "20px",
@@ -22,7 +22,7 @@ const styles = (theme) => ({
     formContentSize:{
         fontSize: "15px",
         textAlign: "center",
-        backgroundColor: "yellow"
+        backgroundColor: "#d01dc8"
     },
     root: {
         '& .MuiTextField-root': {

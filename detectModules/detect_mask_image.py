@@ -44,7 +44,7 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True)
 		blob = cv2.dnn.blobFromImage(image, 1.0, (300, 300),
 			(104.0, 177.0, 123.0))
 		# pass the blob through the network and obtain the face detections
-		print("[INFO] computing face detections...")
+		#print("[INFO] computing face detections...")
 		net.setInput(blob)
 		detections = net.forward()
 		# loop over the detections
@@ -88,7 +88,7 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True)
 				# the bounding box and text
 				label = "Mask" if mask > withoutMask else "No Mask"
 				color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
-				print("debug")
+				#print("debug")
 				if mask > withoutMask:
 					#print("Mask ", mask); 
 					result = True

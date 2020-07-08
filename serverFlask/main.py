@@ -27,8 +27,10 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['txt', 'gif', 'png', 'jpg', 'jpeg', 'bmp', 'rar', 'zip', '7zip', 'doc', 'docx'])
 IGNORED_FILES = set(['.gitignore'])
 
-## Load model
+#global variable
 global graph,model, net, sess , result, conn , covid_result, serialcomm
+
+## Load model
 prototxtPath = os.path.sep.join([detect_mask_module_path, 'face_detector', "deploy.prototxt"])
 weightsPath = os.path.sep.join([detect_mask_module_path, 'face_detector',
     "res10_300x300_ssd_iter_140000.caffemodel"])
@@ -42,8 +44,7 @@ drop_tables(conn, "users")
 #create new db users
 create_table_user(conn)
 
-#connect drivers
-serialcomm = setup('COM9', 9600, 1)
+
 
 @app.route('/run/<command>')
 def run(command):
@@ -95,13 +96,13 @@ def img_upload():
             # data = {
             #     "result" : result,
             # }
-            if(result):
-                #Have mask
-                print("Have Mask")
-                #return result
-            else:
+            # if(result):
+            #     #Have mask
+            #     print("Have Mask")
+            #     #return result
+            # else:
                 #No Mask
-                print("No Mask")
+                # print("No Mask")
                 #return result
             return escape(result) 
         else:
@@ -123,6 +124,8 @@ def info_upload():
         heath_dtls = res["heath_dtls"]
         name = res["name"]
         ages = res["ages"]
+        #connect drivers
+        serialcomm = setup('COM9', 19200, 1)
         # save data into database
         data = [name, ages, covid_result, heath_dtls]
         insert_data(conn, data)
