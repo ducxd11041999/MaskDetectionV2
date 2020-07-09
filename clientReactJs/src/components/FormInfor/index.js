@@ -9,10 +9,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import FormLabel from '@material-ui/core/FormLabel';
 import { withStyles } from '@material-ui/core';
 import styles from './Style'
-import FormControl from '@material-ui/core/FormControl';
+import Checkbox from '@material-ui/core/Checkbox';
 
 class FormDialog extends Component {
 
@@ -22,18 +21,26 @@ class FormDialog extends Component {
         this.state = {
             open: false,
             name: '',
-            ages: 0,
-            heath: '',
-            gender: false
+            ages: '',
+            heath_dtls: '',
+            gender: false,
+            cough: false,
+            headache: false,
+            breath: false,
+            tangent: false
         };
     }
     onClearData = () =>{
         this.setState ({
             open: false,
             name: '',
-            ages: 0,
-            heath: '',
-            gender: false
+            ages: '0',
+            heath_dtls: '',
+            gender: false,
+            cough: false,
+            headache: false,
+            breath: false,
+            tangent: false
         });
         this.handleClose();
     }
@@ -45,7 +52,9 @@ class FormDialog extends Component {
         var target = event.target
         var name = target.name
         var value = target.value
-        if (name ==='status')
+        //console.log(name + " " + value)
+        //console.log(typeof value)
+        if (name ==='cough' || name === 'breath' || name === 'headache' || name === 'tangent')
         {
             value = (value === "true" ? true : false);
         }
@@ -64,66 +73,144 @@ class FormDialog extends Component {
         const {openForm, classes} = this.props
     return (
         <div>
-            <Dialog open={openForm} onClose={this.handleClose}  aria-labelledby="form-dialog-title">
-                <FormControl>
+            <Dialog open={openForm} onClose={this.handleClose}  
+            aria-labelledby="form-dialog-title" 
+            fullWidth = {true}
+            className = {classes.root}>
+                <form className={classes.root} autoComplete="off">
                     <DialogTitle id="form-dialog-title" >
                         <div className={classes.formSize}>
                             Thông tin cá nhân
                         </div>
                     </DialogTitle>
-                    <DialogContent  className = {classes.formContentSize}>
-                        <DialogContentText className = {classes.content}>
+                    <DialogContent>
+                        <DialogContentText className = {classes.formContentSize}>
                             Vui lòng điền thông tin cá nhân của bạn
                         </DialogContentText>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                name="name"
-                                label="Họ & Tên"
-                                type="text"
-                                value = {this.state.name}
-                                fullWidth
-                                onChange = {this.onChange}
-                                required
-                            />
                                 <TextField
+                                    variant = "filled"
+                                    autoFocus
+                                    margin="dense"
+                                    name="name"
+                                    label="Họ & Tên"
+                                    type="text"
+                                    value = {this.state.name}
+                                    fullWidth = {true}
+                                    onChange = {this.onChange}
+                                    inputProps={{
+                                        style: {fontSize: "15px"} 
+                                    }}
+                                    InputLabelProps={{style: {fontSize: "15px"}}} // font size of input label
+                                    required
+                                />
+                                <TextField
+                                    variant = "filled"
                                     autoFocus
                                     margin="dense"
                                     name="ages"
-                                    type="number"
+                                    type="text"
                                     label ="Tuổi"
                                     value = {this.state.ages}
                                     onChange = {this.onChange}
+                                    inputProps={{
+                                        style: {fontSize: "15px"} 
+                                    }}
+                                    InputLabelProps={{style: {fontSize: "15px"}}} // font size of input label
                                     fullWidth
-                                    required 
+                                    required
                                 />
-                        <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender" value={this.state.gender} onChange={this.onChange} required >
-                            <FormControlLabel value= "false" checked ={this.state.gender === "false"}  control={<Radio />} label="Female" />
-                            <FormControlLabel value="true" checked ={this.state.gender === "true"} control={<Radio />} label="Male" />
+                        <span className = {classes.pl10} style={{ fontSize: '15px', color : "red" }}>Giới tính</span>
+                        <br />
+                        <RadioGroup aria-label="gender" 
+                            name="gender" value={this.state.gender}
+                            onChange={this.onChange} 
+                            required
+                            className = {classes.pl10}
+                        >
+                            <FormControlLabel value= "false" 
+                                checked ={this.state.gender === "false"} 
+                                control={<Radio />} 
+                                label={<span style={{ fontSize: '15px' }}>Nữ</span>}
+                            />
+                            <FormControlLabel value="true" 
+                                checked ={this.state.gender === "true"} control={<Radio />} 
+                                label={<span style={{ fontSize: '15px' }}>Nam</span>} 
+                            />
                         </RadioGroup>
+                        <br />
+                        <span className = {classes.pl10} style={{ fontSize: '15px', color : "red" }}>Bạn có các triệu chứng sau?</span>
+                        <br />
+                        <br />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="cough" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.cough}
+                            label={<span style={{ fontSize: '15px' }}>Ho</span>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="headache" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.headache}
+                            label={<span style={{ fontSize: '15px' }}>Nhứt đầu</span>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="breath" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.breath}
+                            label={<span style={{ fontSize: '15px' }}>Khó thở</span>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="tangent" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.tangent}
+                            label={<span style={{ fontSize: '15px' }}>Tiếp xúc với bệnh nhân</span>}
+                        />
+                        <br />
+                        <br />
                         <TextField
                             autoFocus
+                            variant = "filled"
                             margin="dense"
-                            name="heath"
-                            label="Tình trạng sức khỏe"
+                            name="heath_dtls"
+                            label="Mô tả chi tiết (không bắt buộc)"
                             type="text"
+                            inputProps={{
+                                style: {fontSize: "15px"} 
+                            }}
+                            InputLabelProps={{style: {fontSize: "15px"}}} // font size of input label
                             value = {this.state.heath}
                             onChange = {this.onChange}
                             fullWidth
-                            required 
+                            required
+                            className = {classes.txtFileSize}
                         />
                         <br/>
                     </DialogContent>
                     <DialogActions>
-                        <Button type="reset" onClick={this.onClearData} color="primary">
+                        <Button variant = "contained" type="reset" onClick={this.onClearData} color="primary">
                             Cancel
                         </Button>
-                        <Button type="submit" color="secondary"  onClick={e => this.onSubmit(e)}>
+                        <Button variant = "contained" type="submit" color="secondary"  onClick={e => this.onSubmit(e)}>
                             Submit
                         </Button>
                     </DialogActions>
-                    </FormControl>
+                    </form>
             </Dialog>
         </div>
     );

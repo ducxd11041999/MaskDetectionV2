@@ -20,7 +20,7 @@ class Notification extends Component {
                 content : "Cửa đã được mở mời bạn vào !!"
             }, {
                 id: 4,
-                title: " Lỗi ",
+                title: " Cảnh báo ",
                 content : "Hệ thống phát hiện bạn không đủ điều kiện checkin :("
             }
             ],

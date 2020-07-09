@@ -26,8 +26,9 @@ function WebcamCapture(props) {
         callApi('/json', 'POST', body).then(res => {
           onCap(res.data)
         })
+        
     }, [webcamRef, onCap]);
-
+    console.log(typeof imgSrc)
     // useEffect(() => {
     //   const interval = setInterval(() => {
     //     console.log("captured");

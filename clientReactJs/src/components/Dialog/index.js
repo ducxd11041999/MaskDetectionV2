@@ -64,20 +64,21 @@ class AlertDialogSlide extends Component {
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
+          fullWidth
         >
-          <DialogTitle id="alert-dialog-slide-title" color = 'secondary' className = {className} >
+          <DialogTitle id="alert-dialog-slide-title" root ="MuiDialogTitle-root" color = 'secondary' className = {className} >
             <div className={classes.zoomTitle}>
               {icon}
               {log.title}
             </div>
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description" >
-                {log.content}
+            <DialogContentText className={classes.zoomContent} id="alert-dialog-slide-description" >
+                  {log.content}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={ () => this.handleClose(true)}  variant="contained" color="secondary">
+            <Button onClick={ () => this.handleClose(true)}  variant="contained" size = "large" color="secondary">
               OK
             </Button>
           </DialogActions>

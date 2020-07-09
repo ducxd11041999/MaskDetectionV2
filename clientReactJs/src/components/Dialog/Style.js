@@ -13,13 +13,15 @@ const styles = () => ({
     icon:{
         padding : "0px",
         margin : "-3px",
+        fontSize: "30px"
     },
     zoomContent:{
-        fontSize: "15px",
-        size: "120%"
+        fontSize: "20px",
+        textAlign: "center"
     },
     zoomTitle:{
-        fontSize: "20px",
+        fontSize: "30px",
+        textAlign:  "center",
     },
     ejectDoor:{
         backgroundColor : "red",

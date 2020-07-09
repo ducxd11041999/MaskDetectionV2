@@ -15,6 +15,8 @@ from flask_cors import CORS, cross_origin
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory, make_response,send_file,jsonify
 import base64
 import detectModules.detect_mask_image as detect_mask_image
+from db import *
+from pySerialDriver import *
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -25,12 +27,24 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 ALLOWED_EXTENSIONS = set(['txt', 'gif', 'png', 'jpg', 'jpeg', 'bmp', 'rar', 'zip', '7zip', 'doc', 'docx'])
 IGNORED_FILES = set(['.gitignore'])
 
-global graph,model, net, sess , result
+#global variable
+global graph,model, net, sess , result, conn , covid_result, serialcomm
+
+## Load model
 prototxtPath = os.path.sep.join([detect_mask_module_path, 'face_detector', "deploy.prototxt"])
 weightsPath = os.path.sep.join([detect_mask_module_path, 'face_detector',
     "res10_300x300_ssd_iter_140000.caffemodel"])
 print(models_path, prototxtPath, weightsPath )
 graph, sess, model, net = detect_mask_image.load_model(models_path, prototxtPath, weightsPath)
+
+### Connect database
+conn = create_connection()
+#drop all data users
+drop_tables(conn, "users")
+#create new db users
+create_table_user(conn)
+
+
 
 @app.route('/run/<command>')
 def run(command):
@@ -42,7 +56,7 @@ def run(command):
 @app.route('/runn', methods=['GET'])
 def handle():
     detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/avt.jpg'), 0.5, show_output=True)
-     
+
 @app.route('/json', methods=['POST', 'GET'])
 @cross_origin()
 def img_upload():
@@ -82,13 +96,13 @@ def img_upload():
             # data = {
             #     "result" : result,
             # }
-            if(result):
-                #Have mask
-                print("Have Mask")
-                #return result
-            else:
+            # if(result):
+            #     #Have mask
+            #     print("Have Mask")
+            #     #return result
+            # else:
                 #No Mask
-                print("No Mask")
+                # print("No Mask")
                 #return result
             return escape(result) 
         else:
@@ -96,22 +110,44 @@ def img_upload():
     else:
         print("NOT POST")     
     return render_template('index.html', status = result)
+
 @app.route('/usr_info', methods=['POST', 'GET'])
 @cross_origin()
 def info_upload():
     if (request.method == 'POST'):
         res = request.get_json()
-        heath = res["heath"]
-        if(heath.find("ho")!=-1):
+        #print(res)
+        if (res["cough"] or res["headache"] or res["breath"] or res["tangent"] ):
+            covid_result = 1
+        else:
+            covid_result = 0
+        heath_dtls = res["heath_dtls"]
+        name = res["name"]
+        ages = res["ages"]
+        #connect drivers
+        serialcomm = setup('COM9', 19200, 1)
+        # save data into database
+        data = [name, ages, covid_result, heath_dtls]
+        insert_data(conn, data)
+        #data_user = view_db(conn, "users")
+        #print (data_user)
+        #print(data)
+        if((name == '')):
+            return escape(True) # mac dinh khong mo cua
+        #print(res)
+        #check no data
+        if (covid_result == 1):
             #print("Co benh")
+            send_data("c", serialcomm)
             return escape(True)
         else:
             #print("Cua da mo khoa")
+            send_data("o", serialcomm)
             return escape(False)
     else:
         return True
-    
+
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host = '0.0.0.0',debug=True)
