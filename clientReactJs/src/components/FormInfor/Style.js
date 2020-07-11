@@ -9,20 +9,15 @@ const styles = (theme) => ({
         display : "flex",
         alignItem:  "center",
     },
-    formSize:{
+    formTitleSize:{
         fontSize: "30px",
         textAlign: "center",
         backgroundColor: "#14e557"
     },
-    formTitleSize:{
+    formContentSize:{
         fontSize: "20px",
         textAlign: "center",
-        backgroundColor: "red"
-    },
-    formContentSize:{
-        fontSize: "15px",
-        textAlign: "center",
-        backgroundColor: "#d01dc8"
+        // backgroundColor: ""
     },
     root: {
         '& .MuiTextField-root': {
@@ -38,6 +33,9 @@ const styles = (theme) => ({
     pl10:{
         paddingLeft : "20px",
     },
+    zoomButton:{
+        fontSize: "15px"
+    }
     
 })
 export default styles

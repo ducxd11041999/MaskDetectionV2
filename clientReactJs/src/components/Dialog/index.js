@@ -56,7 +56,7 @@ class AlertDialogSlide extends Component {
       var className = this.styleTitle()
       var icon = this.showIcon(log.id)
   return (
-    <div >
+    <div className = {classes.borderDialog}>
         <Dialog
           open={open}
           TransitionComponent={this.Transition}
@@ -78,7 +78,7 @@ class AlertDialogSlide extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={ () => this.handleClose(true)}  variant="contained" size = "large" color="secondary">
+            <Button onClick={ () => this.handleClose(true)} className={classes.zoomButton} variant="contained" size = "large" color="secondary">
               OK
             </Button>
           </DialogActions>

@@ -27,7 +27,10 @@ class FormDialog extends Component {
             cough: false,
             headache: false,
             breath: false,
-            tangent: false
+            tangent: false,
+            travel: false,
+            fever: false,
+            tire:false
         };
     }
     onClearData = () =>{
@@ -79,13 +82,13 @@ class FormDialog extends Component {
             className = {classes.root}>
                 <form className={classes.root} autoComplete="off">
                     <DialogTitle id="form-dialog-title" >
-                        <div className={classes.formSize}>
+                        <div className={classes.formTitleSize}>
                             Thông tin cá nhân
                         </div>
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText className = {classes.formContentSize}>
-                            Vui lòng điền thông tin cá nhân của bạn
+                            Vui lòng điền thông tin cá nhân của bạn trong 14 ngày gần đây và chắc chắn rằng thông tin bạn cung cấp hoàn toàn chính xác
                         </DialogContentText>
                                 <TextField
                                     variant = "filled"
@@ -137,9 +140,7 @@ class FormDialog extends Component {
                                 label={<span style={{ fontSize: '15px' }}>Nam</span>} 
                             />
                         </RadioGroup>
-                        <br />
-                        <span className = {classes.pl10} style={{ fontSize: '15px', color : "red" }}>Bạn có các triệu chứng sau?</span>
-                        <br />
+                        <span className = {classes.pl10} style={{ fontSize: '15px', color : "red" }}>Bạn có các trường hợp sau?</span>
                         <br />
                         <FormControlLabel
                             control={
@@ -149,7 +150,7 @@ class FormDialog extends Component {
                             onChange={this.onChange}
                             className = {classes.pl10}
                             value = {!this.state.cough}
-                            label={<span style={{ fontSize: '15px' }}>Ho</span>}
+                            label={<span style={{ fontSize: '15px' }}>Ho khan</span>}
                         />
                         <FormControlLabel
                             control={
@@ -175,38 +176,49 @@ class FormDialog extends Component {
                             control={
                                 <Checkbox />
                             }
+                            name="tire" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.tire}
+                            label={<span style={{ fontSize: '15px' }}>Mệt mõi</span>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="fever" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.fever}
+                            label={<span style={{ fontSize: '15px' }}>Sốt</span>}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
                             name="tangent" 
                             onChange={this.onChange}
                             className = {classes.pl10}
                             value = {!this.state.tangent}
                             label={<span style={{ fontSize: '15px' }}>Tiếp xúc với bệnh nhân</span>}
                         />
-                        <br />
-                        <br />
-                        <TextField
-                            autoFocus
-                            variant = "filled"
-                            margin="dense"
-                            name="heath_dtls"
-                            label="Mô tả chi tiết (không bắt buộc)"
-                            type="text"
-                            inputProps={{
-                                style: {fontSize: "15px"} 
-                            }}
-                            InputLabelProps={{style: {fontSize: "15px"}}} // font size of input label
-                            value = {this.state.heath}
-                            onChange = {this.onChange}
-                            fullWidth
-                            required
-                            className = {classes.txtFileSize}
+                        <FormControlLabel
+                            control={
+                                <Checkbox />
+                            }
+                            name="travel" 
+                            onChange={this.onChange}
+                            className = {classes.pl10}
+                            value = {!this.state.travel}
+                            label={<span style={{ fontSize: '15px' }}>Đã từng di chuyển qua nơi có dịch</span>}
                         />
-                        <br/>
+                        <br />
                     </DialogContent>
                     <DialogActions>
-                        <Button variant = "contained" type="reset" onClick={this.onClearData} color="primary">
+                        <Button variant = "contained" type="reset"  className = {classes.zoomButton} onClick={this.onClearData} color="primary">
                             Cancel
                         </Button>
-                        <Button variant = "contained" type="submit" color="secondary"  onClick={e => this.onSubmit(e)}>
+                        <Button variant = "contained" type="submit"  className = {classes.zoomButton} color="secondary"  onClick={e => this.onSubmit(e)}>
                             Submit
                         </Button>
                     </DialogActions>

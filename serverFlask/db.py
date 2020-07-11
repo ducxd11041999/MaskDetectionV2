@@ -10,13 +10,13 @@ def create_connection():
         print("err connection " + e)
     return conn
 def create_table_user(conn):
-    conn.execute('CREATE TABLE users (name TEXT, age TEXT, cv_result INT ,  heath TEXT)')
+    conn.execute('CREATE TABLE users (name TEXT, age TEXT, cv_result INT)')
     print ("Table created successfully")
 
 def insert_data(conn , data):
     with conn as con:
         cur = con.cursor()
-        cur.execute('INSERT INTO users (name, age, cv_result ,heath) values (?,?,?,?)', data)
+        cur.execute('INSERT INTO users (name, age, cv_result) values (?,?,?)', data)
 
 def create_table_param(conn, create_table_sql):
     """ create a table from the create_table_sql statement
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     conn = create_connection()
     drop_tables(conn, "users")
     create_table_user(conn)
-    data = ['duc', '21', 1 ,  'Ok']
+    data = ['duc', '21', 1 ]
     print(data[2])
     insert_data(conn, data)
     print(view_db(conn, "users"))

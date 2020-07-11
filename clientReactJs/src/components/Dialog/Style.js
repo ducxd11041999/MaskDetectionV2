@@ -16,8 +16,9 @@ const styles = () => ({
         fontSize: "30px"
     },
     zoomContent:{
-        fontSize: "20px",
-        textAlign: "center"
+        fontSize: "25px",
+        textAlign: "center",
+        padding: "24px"
     },
     zoomTitle:{
         fontSize: "30px",
@@ -27,6 +28,14 @@ const styles = () => ({
         backgroundColor : "red",
         display : "flex",
         alignItem:  "center"
+    },
+    zoomButton:{
+        fontSize: "15px",
+        width: "100px"
+        // margin:"20px"
+    },
+    borderDialog:{
+        borderStyle: "groove"
     }
 })
 export default styles

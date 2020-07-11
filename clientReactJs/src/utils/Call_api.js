@@ -1,7 +1,7 @@
 import axios from 'axios'
 import * as config from './../constants/config'
 
-export default function callApi(endpoint, method = 'GET', body){
+export default async function callApi(endpoint, method = 'GET', body){
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     headers.append('Accept', 'application/json');
@@ -22,4 +22,20 @@ export default function callApi(endpoint, method = 'GET', body){
         console.log(ex)
     }
 }
+
+
+export function makePostRequest(path, data) { 
+    return new Promise(function (resolve, reject) { 
+        axios.post(path, data).then( 
+            (response) => { 
+                var result = response.data; 
+                console.log('Processing Request'); 
+                resolve(result); 
+            }, 
+                (error) => { 
+                reject(error); 
+            } 
+        ); 
+    }); 
+} 
 

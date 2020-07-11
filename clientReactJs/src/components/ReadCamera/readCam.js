@@ -2,7 +2,7 @@ import Webcam from "react-webcam";
 import React from 'react'
 import videoConstraints from './Setting'
 import Button from '@material-ui/core/Button';
-import callApi from './../../utils/Call_api'
+// import callApi from './../../utils/Call_api'
 import PropTypes from 'prop-types';
 import styles from './Style'
 import { withStyles } from '@material-ui/core/styles';
@@ -23,9 +23,10 @@ function WebcamCapture(props) {
         setImgSrc(imageSrc);
         var json = (`{ "img": ${JSON.stringify(imageSrc)}}`);
         var body = JSON.parse(json)
-        callApi('/json', 'POST', body).then(res => {
-          onCap(res.data)
-        })
+        // callApi('/json', 'POST', body).then(res => {
+        //   onCap(res.data)
+        // })
+        onCap(body)
         
     }, [webcamRef, onCap]);
     console.log(typeof imgSrc)

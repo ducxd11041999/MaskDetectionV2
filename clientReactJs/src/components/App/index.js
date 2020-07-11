@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core';
 import Notification from './../Notifications/index';
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './../../commons/theme'
+import LoadingPage from './../LoadingPage/index.js'
 //import Stream from './../StreamVideo/index'
 import ReadCamera from './../ReadCamera/index'
 import FormDialog from './../FormInfor/index'
@@ -19,27 +20,38 @@ class App extends Component{
       openLog: true,
       isHeath_OK: true, //mặt định user có bệnh
       step : "0",
-      logId: 0
+      logId: 0,
+      isDisplayLoading: false
     };
+    this.onCap = this.onCap.bind(this)
   }
-
   onCap = (param) =>{
     // recive status mask
-    console.log("Bấm nút chụp")
-    var par  = param === 'True'? true: false;
+    this.setState({
+      isDisplayLoading : true
+    })
+    console.log("Bấm nút chụp", param)
+    callApi('/json', 'POST', param).then(res => {
+          this.checkMask(res.data)
+      })
+  }
+  checkMask = (resultCheck) =>{
+    var par  = resultCheck === 'True'? true: false;
     if(par){
       this.setState({
         mask: par, /// update lai co khau trang khong
         openLog: true, // mo thong báo
         step: "1", // chuyển sang bước 1
-        logId: 2 /// Log ra thông báo có khẩu trang
+        logId: 2, /// Log ra thông báo có khẩu trang
+        isDisplayLoading: false
       })}
     else{
       this.setState({
         mask: par, /// update lai co khau trang khong
         openLog: true, /// mo thong bao
         step: "0", /// Chuyển về lại bước 0
-        logId: 1 // log ra warning
+        logId: 1, // log ra warning
+        isDisplayLoading: false
     })}
     console.log("Update sau chụp", this.state.step)
   }
@@ -49,7 +61,8 @@ class App extends Component{
       displayForm: false,
       openLog: true,
       isHeath_OK: true,
-      step : "0"
+      step : "0",
+      isDisplayLoading: false
     }) 
   }
   onClickNext = (param) =>{
@@ -119,6 +132,11 @@ class App extends Component{
       displayForm: false
     })
   }
+  displayLoadingPage = () =>{
+    return(
+        <LoadingPage displayLoading = {this.state.isDisplayLoading}/> 
+    )
+  }
   render(){
     let {classes} = this.props
     return (
@@ -131,6 +149,7 @@ class App extends Component{
                 onStep = {this.state.step}
                 id = {this.state.logId}
             />
+            <LoadingPage displayLoading = {this.state.isDisplayLoading}/> 
             <FormDialog onInformation = {this.onInformation} 
               openForm = {this.state.displayForm}
               onStep = {this.state.step}

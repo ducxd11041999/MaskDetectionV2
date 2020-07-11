@@ -117,17 +117,17 @@ def info_upload():
     if (request.method == 'POST'):
         res = request.get_json()
         #print(res)
-        if (res["cough"] or res["headache"] or res["breath"] or res["tangent"] ):
+        if (res["cough"] or res["headache"] or res["breath"] or res["tangent"] or res["tire"] or res["fever"] or res["travel"]):
             covid_result = 1
         else:
             covid_result = 0
-        heath_dtls = res["heath_dtls"]
+        #heath_dtls = res["heath_dtls"]
         name = res["name"]
         ages = res["ages"]
         #connect drivers
-        serialcomm = setup('COM9', 19200, 1)
+        #serialcomm = setup('COM9', 19200, 1)
         # save data into database
-        data = [name, ages, covid_result, heath_dtls]
+        data = [name, ages, covid_result]
         insert_data(conn, data)
         #data_user = view_db(conn, "users")
         #print (data_user)
@@ -138,11 +138,11 @@ def info_upload():
         #check no data
         if (covid_result == 1):
             #print("Co benh")
-            send_data("c", serialcomm)
+            #send_data("c", serialcomm)
             return escape(True)
         else:
             #print("Cua da mo khoa")
-            send_data("o", serialcomm)
+            #send_data("o", serialcomm)
             return escape(False)
     else:
         return True

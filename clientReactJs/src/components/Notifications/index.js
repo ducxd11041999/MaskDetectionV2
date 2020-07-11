@@ -9,19 +9,19 @@ class Notification extends Component {
             log:[{
                 id: 1,
                 title: " Cảnh báo ",
-                content : "Bạn vui lòng đeo khẩu trang trước khi vào cửa"
+                content : "Bạn vui lòng đeo khẩu trang trước khi vào cửa @@"
             },{
                 id: 2,
                 title: " Thông báo ",
-                content : "Hệ thống nhận diện bạn đã có khẩu trang vui lòng thực hiện bước tiếp theo"
+                content : "Hệ thống nhận diện bạn đã có khẩu trang vui lòng thực hiện bước tiếp theo !!"
             },{
                 id: 3,
                 title: " Thành công ",
-                content : "Cửa đã được mở mời bạn vào !!"
+                content : "Cửa đã được mở mời bạn vào <3"
             }, {
                 id: 4,
                 title: " Cảnh báo ",
-                content : "Hệ thống phát hiện bạn không đủ điều kiện checkin :("
+                content : "Hệ thống phát hiện bạn không đủ điều kiện checkin :(("
             }
             ],
             maskCheck: false
