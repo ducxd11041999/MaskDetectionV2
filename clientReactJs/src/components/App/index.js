@@ -21,37 +21,45 @@ class App extends Component{
       isHeath_OK: true, //mặt định user có bệnh
       step : "0",
       logId: 0,
-      isDisplayLoading: false
+      isDisplayLoading: false,
+      rp: false,
+      imgResult: '',
+      onBlock: false
     };
     this.onCap = this.onCap.bind(this)
   }
   onCap = (param) =>{
     // recive status mask
     this.setState({
-      isDisplayLoading : true
+      isDisplayLoading : true,
+      onBlock: true
     })
     console.log("Bấm nút chụp", param)
     callApi('/json', 'POST', param).then(res => {
-          this.checkMask(res.data)
+          console.log((res))
+          let resultCheck =  res.data.result
+          let imgResult = res.data.img
+          this.checkMask(resultCheck, imgResult)
       })
   }
-  checkMask = (resultCheck) =>{
-    var par  = resultCheck === 'True'? true: false;
-    if(par){
+  checkMask = (resultCheck, imgResult) =>{
+    if(resultCheck){
       this.setState({
-        mask: par, /// update lai co khau trang khong
+        mask: resultCheck, /// update lai co khau trang khong
         openLog: true, // mo thong báo
         step: "1", // chuyển sang bước 1
         logId: 2, /// Log ra thông báo có khẩu trang
-        isDisplayLoading: false
+        isDisplayLoading: false,
+        imgResult: imgResult
       })}
     else{
       this.setState({
-        mask: par, /// update lai co khau trang khong
+        mask: resultCheck, /// update lai co khau trang khong
         openLog: true, /// mo thong bao
         step: "0", /// Chuyển về lại bước 0
         logId: 1, // log ra warning
-        isDisplayLoading: false
+        isDisplayLoading: false,
+        imgResult: imgResult,
     })}
     console.log("Update sau chụp", this.state.step)
   }
@@ -62,7 +70,9 @@ class App extends Component{
       openLog: true,
       isHeath_OK: true,
       step : "0",
-      isDisplayLoading: false
+      isDisplayLoading: false,
+      imgResult: '',
+      onBlock : false
     }) 
   }
   onClickNext = (param) =>{
@@ -81,14 +91,18 @@ class App extends Component{
             this.setState({
               displayForm: false,
               openLog: true,
-              step: "0"
+              step: "0",
+              imgResult: '',
+              onBlock : false
             })
           }
           else{
             this.setState({
               displayForm: false,
               openLog: false,
-              step: "0"
+              step: "0",
+              imgResult: '',
+              onBlock : false
             })
           }
       }
@@ -96,7 +110,9 @@ class App extends Component{
       this.setState({
         displayForm: false,
         openLog: false,
-        step: "0"
+        step: "0",
+        imgResult: '',
+        onBlock : false
       })
     }
   }
@@ -120,8 +136,8 @@ class App extends Component{
           openLog: true,
           logId: 3,
           step: "3" /// chuyển sang bước 3
-      })
-      }
+        })
+        }
       })
     this.onCloseForm();
   }
@@ -129,7 +145,10 @@ class App extends Component{
   }
   onCloseForm = () =>{
     this.setState({
-      displayForm: false
+      displayForm: false,
+      step:"0",
+      imgResult: '',
+      onBlock : false
     })
   }
   displayLoadingPage = () =>{
@@ -154,7 +173,12 @@ class App extends Component{
               openForm = {this.state.displayForm}
               onStep = {this.state.step}
               onCloseForm = {this.onCloseForm}/>
-            <ReadCamera onCap = {this.onCap}/>
+            <ReadCamera onCap = {this.onCap} 
+                onStep={this.state.step} 
+                onReplay = {this.state.rp} 
+                onImageResult = {this.state.imgResult}
+                onBlock = {this.state.onBlock}
+            />
           </div>
         </div>
       </ThemeProvider>

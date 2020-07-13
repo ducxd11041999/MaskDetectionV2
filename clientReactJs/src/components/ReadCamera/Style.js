@@ -13,7 +13,7 @@ const styles = ((theme) => ({
     btnCapture:{
       position: "absolute",
       top: "88%",
-      right: "10%",
+      right: "5%",
       width: "15%",
       height: "10%",
       fontSize:"20px"
