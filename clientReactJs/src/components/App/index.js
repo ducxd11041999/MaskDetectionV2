@@ -13,6 +13,7 @@ import callApi from './../../utils/Call_api'
 class App extends Component{
   constructor(props) {
       super(props);
+      this.timeout = null
       this.wrapper = React.createRef();
       this.state = {
       mask: false,
@@ -56,6 +57,9 @@ class App extends Component{
       })
   }
   checkMask = (resultCheck, imgResult) =>{
+    this.timeout = setTimeout(() => {
+      this.onClear()
+    }, 15000);
     if(resultCheck){
       this.setState({
         mask: resultCheck, /// update lai co khau trang khong
@@ -64,7 +68,8 @@ class App extends Component{
         logId: 2, /// Log ra thông báo có khẩu trang
         isDisplayLoading: false,
         imgResult: imgResult
-      })}
+      })
+    }
     else{
       this.setState({
         mask: resultCheck, /// update lai co khau trang khong
@@ -80,8 +85,8 @@ class App extends Component{
     this.setState({
       mask: false,
       displayForm: false,
-      openLog: true,
-      isHeath_OK: true,
+      openLog: false,
+      isHeath_OK: false,
       step : "0",
       isDisplayLoading: false,
       imgResult: '',
@@ -90,7 +95,8 @@ class App extends Component{
   }
   onClickNext = (param) =>{
     // click Ok from dialog
-      if(this.state.mask){
+      clearTimeout(this.timeout)
+      if(this.state.mask){  
         console.log("click next va co mat na")
         if(param){
           console.log(this.state.step)
@@ -99,7 +105,11 @@ class App extends Component{
             displayForm: true, // mo from
             openLog: false, // dong cac log lai
             step: "2" // chuyen sang buoc 2
-          })}
+          })
+          this.timeout = setTimeout(() => {
+            this.onClear()
+          }, 30000);
+        }
           else if(this.state.step==="3"){
             this.setState({
               displayForm: false,
@@ -130,6 +140,8 @@ class App extends Component{
     }
   }
   onInformation = (param) =>{
+    clearTimeout(this.timeout)
+   
     // recive data from form
     //console.log("Form được submit với nội dung sau" , param)
     if(param){
@@ -145,6 +157,9 @@ class App extends Component{
             step: "3", /// chuyển sang bước 3
             onBlock : true
         })
+        this.timeout = setTimeout(() => {
+          this.onClear()
+        }, 15000);
       }else{
         this.setState({
           displayForm: false,
@@ -154,7 +169,6 @@ class App extends Component{
           step: "3", /// chuyển sang bước 3
           onBlock : true
         })
-        }
       })
   }
 

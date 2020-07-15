@@ -1,7 +1,7 @@
 import Webcam from "react-webcam";
 import React, {useEffect} from 'react'
 import videoConstraints from './Setting'
-import Button from '@material-ui/core/Button';
+//import Button from '@material-ui/core/Button';
 // import callApi from './../../utils/Call_api'
 import PropTypes from 'prop-types';
 import styles from './Style'
@@ -18,7 +18,7 @@ function WebcamCapture(props) {
     const webcamRef = React.useRef(null);
     const [imgSrc, setImgSrc] = React.useState(null);
     // const [replay, setReplay] = React.useState(false);
-    const {onCap, classes, onImageResult, onBlock} = props;
+    const {onCap, onImageResult, onBlock} = props;
     const capture = React.useCallback(() => {
         const imageSrc = webcamRef.current.getScreenshot();
         setImgSrc(imageSrc);
@@ -70,9 +70,9 @@ function WebcamCapture(props) {
     return (
       <div>
         {replayImage()}
-        <Button variant="contained" onClick={capture}
+        {/* <Button variant="contained" onClick={capture}
             color = 'secondary' className = {classes.btnCapture}>Check In
-        </Button>
+        </Button> */}
       </div>
     );
   };
