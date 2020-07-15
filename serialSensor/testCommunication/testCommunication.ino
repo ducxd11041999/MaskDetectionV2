@@ -1,6 +1,6 @@
 #include <Servo.h>
 
-String incomingByte ;    
+char incomingByte ;    
 Servo myservo;  // create servo object to control a servo
 int servoPin = 9;       // Khai báo chân điều khiển servo
 int LED = 8;
@@ -15,25 +15,17 @@ void loop() {
   myservo.write(75);  
   digitalWrite(LED, LOW);
   if (Serial.available() > 0) {
-
-  incomingByte = Serial.readStringUntil('\n');
-    if (incomingByte == "o") {
+//    digitalWrite(LED, HIGH);
+    incomingByte = Serial.read();
+    if (incomingByte == 'o') {
       digitalWrite(LED, HIGH);
-      Serial.write("o");
+      //Serial.write("o");
       myservo.write(0);                  // sets the servo position according to the scaled value
       delay(10000);
     }
-    else if (incomingByte == "c") {
-      digitalWrite(LED, LOW);
-      Serial.write("c");
-      myservo.write(75);                  // sets the servo position according to the scaled value
-
-    }
     else{
-     Serial.write("invald input");
+     Serial.write((char)incomingByte);
       myservo.write(0);  
     }
-
   }
-
 }

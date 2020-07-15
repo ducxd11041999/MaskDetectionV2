@@ -8,12 +8,15 @@ def setup(COM , baudrate , time):
     return serialcomm
 
 def send_data(data, serialcomm):
-    while True:
+    i = 0
+    while i < 5:
         serialcomm.write(data.encode())
-        #time.sleep(0.5)
-        if(serialcomm.readline()):
-            return serialcomm.readline()
+        i = i + 1
+        time.sleep(0.1)
+
+    # if(serialcomm.readline()):
+    #     return serialcomm.readline()
 
 if __name__ == '__main__':
-    serialcomm = setup('COM7', 19200, 1)
+    serialcomm = setup('COM9', 19200, 1)
     send_data("o", serialcomm)

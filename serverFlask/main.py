@@ -131,7 +131,7 @@ def info_upload():
         name = res["name"]
         ages = res["ages"]
         #connect drivers
-        #serialcomm = setup('COM9', 19200, 1)
+        
         # save data into database
         data = [name, ages, covid_result]
         insert_data(conn, data)
@@ -145,10 +145,13 @@ def info_upload():
         if (covid_result == 1):
             #print("Co benh")
             #send_data("c", serialcomm)
+            
             return escape(True)
         else:
             #print("Cua da mo khoa")
             #send_data("o", serialcomm)
+            serialcomm = setup('COM9', 19200, 1)
+            send_data("o", serialcomm)
             return escape(False)
     else:
         return True

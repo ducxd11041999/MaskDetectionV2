@@ -87,10 +87,10 @@ class App extends Component{
             openLog: false, // dong cac log lai
             step: "2" // chuyen sang buoc 2
           })}
-          else if(this.state.step===3){
+          else if(this.state.step==="3"){
             this.setState({
               displayForm: false,
-              openLog: true,
+              openLog: false,
               step: "0",
               imgResult: '',
               onBlock : false
@@ -125,21 +125,24 @@ class App extends Component{
         var status = res.data === "True"?true:false;
         if(status){ // neu phat hien co benh
         this.setState({
+            displayForm: false,
             isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
             openLog: true,
             logId: 4,
-            step: "3" /// chuyển sang bước 3
+            step: "3", /// chuyển sang bước 3
+            onBlock : true
         })
       }else{
         this.setState({
+          displayForm: false,
           isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
           openLog: true,
           logId: 3,
-          step: "3" /// chuyển sang bước 3
+          step: "3", /// chuyển sang bước 3
+          onBlock : true
         })
         }
       })
-    this.onCloseForm();
   }
 
   }

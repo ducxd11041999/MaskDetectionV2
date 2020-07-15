@@ -43,11 +43,13 @@ function WebcamCapture(props) {
     }, [capture, onBlock]);
     const replayImage = React.useCallback(() =>{
       if(onImageResult){
-        let imageObj = "data:image/webp;base64,"+onImageResult;
+        let imageObj = "data:image/webp;base64," + onImageResult;
         return (<div>
                   <img
                     src={imageObj}
                     alt = "Không load được ảnh"
+                    width="1300"
+                    height = "650"
                   />
               </div>
         )
