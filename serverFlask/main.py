@@ -150,8 +150,8 @@ def info_upload():
         else:
             #print("Cua da mo khoa")
             #send_data("o", serialcomm)
-            serialcomm = setup('COM9', 19200, 1)
-            send_data("o", serialcomm)
+            # serialcomm = setup('COM9', 19200, 1)
+            # send_data("o", serialcomm)
             return escape(False)
     else:
         return True
