@@ -31,7 +31,7 @@ class App extends Component{
   onCap = (param) =>{
     // recive status mask
     this.setState({
-      isDisplayLoading : true,
+      isDisplayLoading : false,
       onBlock: true
     })
     console.log("Bấm nút chụp", param)
@@ -39,7 +39,20 @@ class App extends Component{
           console.log((res))
           let resultCheck =  res.data.result
           let imgResult = res.data.img
+          if(resultCheck === "None"){
+            this.setState({
+              mask: false,
+              displayForm: false,
+              openLog: false,
+              isHeath_OK: true,
+              step : "0",
+              isDisplayLoading: false,
+              imgResult: '',
+              onBlock : false
+            }) 
+          }else{
           this.checkMask(resultCheck, imgResult)
+          }
       })
   }
   checkMask = (resultCheck, imgResult) =>{

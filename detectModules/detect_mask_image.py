@@ -106,7 +106,9 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = False
 				cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
 				break
 			else:
-				result = False
+				result = "None"
+				#print("None")
+                
 				
 			# show the output image
 		if(show_output == True):
