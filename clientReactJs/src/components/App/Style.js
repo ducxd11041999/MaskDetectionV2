@@ -12,8 +12,9 @@ const styles = () => ({
         position: "absolute",
         margin: "0px",
         overflow: "hidden",
-        top: "0px",
-        bottom: "0px",
+        top: "-10px",
+        bottom: "10px",
+        // left:"10px",
         width: "100%"
     }
 })

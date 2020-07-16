@@ -17,6 +17,7 @@ import base64
 import detectModules.detect_mask_image as detect_mask_image
 from db import *
 from pySerialDriver import *
+import json
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -75,6 +76,7 @@ def img_upload():
         rgb_im = im.convert('RGB')
         rgb_im.save('../detectModules/screen/image.jpg')
         image, result = detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/screen/image.jpg'), 0.5, show_output=False)
+
         #print((image))
         if(image is not None):
             # print("OK")
@@ -104,7 +106,11 @@ def img_upload():
                 #No Mask
                 # print("No Mask")
                 #return result
-            return escape(result) 
+            with open("./Output/test.png", "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read())
+            return_data = {"result" : result, "img":encoded_string}
+            # return  '{},{}'.format(result,encoded_string)
+            return jsonify(return_data)
         else:
             print("Not file return")
     else:
@@ -125,7 +131,7 @@ def info_upload():
         name = res["name"]
         ages = res["ages"]
         #connect drivers
-        #serialcomm = setup('COM9', 19200, 1)
+        
         # save data into database
         data = [name, ages, covid_result]
         insert_data(conn, data)
@@ -139,10 +145,13 @@ def info_upload():
         if (covid_result == 1):
             #print("Co benh")
             #send_data("c", serialcomm)
+            
             return escape(True)
         else:
             #print("Cua da mo khoa")
             #send_data("o", serialcomm)
+            # serialcomm = setup('COM9', 19200, 1)
+            # send_data("o", serialcomm)
             return escape(False)
     else:
         return True

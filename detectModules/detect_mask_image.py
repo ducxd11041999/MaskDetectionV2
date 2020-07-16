@@ -32,7 +32,7 @@ def load_model(model_path , prototxtPath , weightsPath):
 		model = keras_models.load_model(model_path)
 	return graph, sess, model, net
 
-def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True):
+def run(graph, sess, model, net, image_path, confidence=0.5, show_output = False):
 	# load the input image from disk, clone it, and grab the image spatial
 	# dimensions
 	with sess.graph.as_default():
@@ -93,23 +93,25 @@ def run(graph, sess, model, net, image_path, confidence=0.5, show_output = True)
 					#print("Mask ", mask); 
 					result = True
 					#print("m")
-					break
 				else:
 					#print("No mask", withoutMask)
 					result = False
-					#print("nm")
-					break
+					#print("nm")	
 				# include the probability in the label
+				label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
+				# display the label and bounding box rectangle on the output
+				# frame
+				cv2.putText(image, label, (startX, startY - 10),
+					cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
+				cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
+				break
 			else:
-				result = False
-		if(show_output == True):
-			label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
-			# display the label and bounding box rectangle on the output
-			# frame
-			cv2.putText(image, label, (startX, startY - 10),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
-			cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
+				result = "None"
+				#print("None")
+                
+				
 			# show the output image
+		if(show_output == True):
 			cv2.imshow("Output", image)
 			cv2.waitKey(0)
 		return image, result

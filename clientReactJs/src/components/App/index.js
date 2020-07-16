@@ -13,6 +13,7 @@ import callApi from './../../utils/Call_api'
 class App extends Component{
   constructor(props) {
       super(props);
+      this.timeout = null
       this.wrapper = React.createRef();
       this.state = {
       mask: false,
@@ -21,37 +22,62 @@ class App extends Component{
       isHeath_OK: true, //mặt định user có bệnh
       step : "0",
       logId: 0,
-      isDisplayLoading: false
+      isDisplayLoading: false,
+      rp: false,
+      imgResult: '',
+      onBlock: false
     };
     this.onCap = this.onCap.bind(this)
   }
   onCap = (param) =>{
     // recive status mask
     this.setState({
-      isDisplayLoading : true
+      isDisplayLoading : false,
+      onBlock: true
     })
     console.log("Bấm nút chụp", param)
     callApi('/json', 'POST', param).then(res => {
-          this.checkMask(res.data)
+          console.log((res))
+          let resultCheck =  res.data.result
+          let imgResult = res.data.img
+          if(resultCheck === "None"){
+            this.setState({
+              mask: false,
+              displayForm: false,
+              openLog: false,
+              isHeath_OK: true,
+              step : "0",
+              isDisplayLoading: false,
+              imgResult: '',
+              onBlock : false
+            }) 
+          }else{
+          this.checkMask(resultCheck, imgResult)
+          }
       })
   }
-  checkMask = (resultCheck) =>{
-    var par  = resultCheck === 'True'? true: false;
-    if(par){
+  checkMask = (resultCheck, imgResult) =>{
+    this.timeout = setTimeout(() => {
+      this.onClear()
+    }, 15000);
+    if(resultCheck){
       this.setState({
-        mask: par, /// update lai co khau trang khong
+        mask: resultCheck, /// update lai co khau trang khong
         openLog: true, // mo thong báo
         step: "1", // chuyển sang bước 1
         logId: 2, /// Log ra thông báo có khẩu trang
-        isDisplayLoading: false
-      })}
+        isDisplayLoading: false,
+        imgResult: imgResult
+      })
+    }
     else{
       this.setState({
-        mask: par, /// update lai co khau trang khong
+        mask: resultCheck, /// update lai co khau trang khong
         openLog: true, /// mo thong bao
         step: "0", /// Chuyển về lại bước 0
         logId: 1, // log ra warning
-        isDisplayLoading: false
+        isDisplayLoading: false,
+        imgResult: imgResult,
     })}
     console.log("Update sau chụp", this.state.step)
   }
@@ -59,15 +85,18 @@ class App extends Component{
     this.setState({
       mask: false,
       displayForm: false,
-      openLog: true,
-      isHeath_OK: true,
+      openLog: false,
+      isHeath_OK: false,
       step : "0",
-      isDisplayLoading: false
+      isDisplayLoading: false,
+      imgResult: '',
+      onBlock : false
     }) 
   }
   onClickNext = (param) =>{
     // click Ok from dialog
-      if(this.state.mask){
+      clearTimeout(this.timeout)
+      if(this.state.mask){  
         console.log("click next va co mat na")
         if(param){
           console.log(this.state.step)
@@ -76,19 +105,27 @@ class App extends Component{
             displayForm: true, // mo from
             openLog: false, // dong cac log lai
             step: "2" // chuyen sang buoc 2
-          })}
-          else if(this.state.step===3){
+          })
+          this.timeout = setTimeout(() => {
+            this.onClear()
+          }, 30000);
+        }
+          else if(this.state.step==="3"){
             this.setState({
               displayForm: false,
-              openLog: true,
-              step: "0"
+              openLog: false,
+              step: "0",
+              imgResult: '',
+              onBlock : false
             })
           }
           else{
             this.setState({
               displayForm: false,
               openLog: false,
-              step: "0"
+              step: "0",
+              imgResult: '',
+              onBlock : false
             })
           }
       }
@@ -96,11 +133,15 @@ class App extends Component{
       this.setState({
         displayForm: false,
         openLog: false,
-        step: "0"
+        step: "0",
+        imgResult: '',
+        onBlock : false
       })
     }
   }
   onInformation = (param) =>{
+    clearTimeout(this.timeout)
+   
     // recive data from form
     //console.log("Form được submit với nội dung sau" , param)
     if(param){
@@ -109,27 +150,35 @@ class App extends Component{
         var status = res.data === "True"?true:false;
         if(status){ // neu phat hien co benh
         this.setState({
+            displayForm: false,
             isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
             openLog: true,
             logId: 4,
-            step: "3" /// chuyển sang bước 3
+            step: "3", /// chuyển sang bước 3
+            onBlock : true
         })
+        this.timeout = setTimeout(() => {
+          this.onClear()
+        }, 15000);
       }else{
         this.setState({
+          displayForm: false,
           isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
           openLog: true,
           logId: 3,
-          step: "3" /// chuyển sang bước 3
+          step: "3", /// chuyển sang bước 3
+          onBlock : true
+        })
       })
-      }
-      })
-    this.onCloseForm();
   }
 
   }
   onCloseForm = () =>{
     this.setState({
-      displayForm: false
+      displayForm: false,
+      step:"0",
+      imgResult: '',
+      onBlock : false
     })
   }
   displayLoadingPage = () =>{
@@ -154,7 +203,12 @@ class App extends Component{
               openForm = {this.state.displayForm}
               onStep = {this.state.step}
               onCloseForm = {this.onCloseForm}/>
-            <ReadCamera onCap = {this.onCap}/>
+            <ReadCamera onCap = {this.onCap} 
+                onStep={this.state.step} 
+                onReplay = {this.state.rp} 
+                onImageResult = {this.state.imgResult}
+                onBlock = {this.state.onBlock}
+            />
           </div>
         </div>
       </ThemeProvider>
