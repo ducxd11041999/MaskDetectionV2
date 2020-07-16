@@ -141,7 +141,6 @@ class App extends Component{
   }
   onInformation = (param) =>{
     clearTimeout(this.timeout)
-   
     // recive data from form
     //console.log("Form được submit với nội dung sau" , param)
     if(param){
@@ -167,12 +166,13 @@ class App extends Component{
           openLog: true,
           logId: 3,
           step: "3", /// chuyển sang bước 3
-          onBlock : true
-        })
+          onBlock: true
+          })
+        }
       })
+    }
   }
 
-  }
   onCloseForm = () =>{
     this.setState({
       displayForm: false,
