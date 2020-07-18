@@ -25,7 +25,8 @@ class App extends Component{
       isDisplayLoading: false,
       rp: false,
       imgResult: '',
-      onBlock: false
+      onBlock: false,
+      countDown: 5
     };
     this.onCap = this.onCap.bind(this)
   }
@@ -35,9 +36,9 @@ class App extends Component{
       isDisplayLoading : false,
       onBlock: true
     })
-    console.log("Bấm nút chụp", param)
+    //console.log("Bấm nút chụp", param)
     callApi('/json', 'POST', param).then(res => {
-          console.log((res))
+          //console.log((res))
           let resultCheck =  res.data.result
           let imgResult = res.data.img
           if(resultCheck === "None"){
@@ -49,17 +50,17 @@ class App extends Component{
               step : "0",
               isDisplayLoading: false,
               imgResult: '',
-              onBlock : false
+              onBlock : false,
             }) 
           }else{
-          this.checkMask(resultCheck, imgResult)
+            this.checkMask(resultCheck, imgResult)
           }
       })
   }
   checkMask = (resultCheck, imgResult) =>{
     this.timeout = setTimeout(() => {
       this.onClear()
-    }, 15000);
+    }, 5000);
     if(resultCheck){
       this.setState({
         mask: resultCheck, /// update lai co khau trang khong
@@ -67,8 +68,21 @@ class App extends Component{
         step: "1", // chuyển sang bước 1
         logId: 2, /// Log ra thông báo có khẩu trang
         isDisplayLoading: false,
-        imgResult: imgResult
+        imgResult: imgResult,
+        countDown : 5
       })
+      let Count = 5
+      clearInterval(this.interval);
+      this.interval = setInterval(() => {
+          Count--
+          this.setState({
+            countDown: Count
+          })
+          //console.log(this.state.countDown)
+          if (Count===0){
+            clearInterval(this.interval);
+          }
+      }, 1000);
     }
     else{
       this.setState({
@@ -78,10 +92,26 @@ class App extends Component{
         logId: 1, // log ra warning
         isDisplayLoading: false,
         imgResult: imgResult,
-    })}
-    console.log("Update sau chụp", this.state.step)
+        countDown: 5
+    })
+    let Count = 5
+    clearInterval(this.interval);
+    this.interval = setInterval(() => {
+        Count--
+        this.setState({
+          countDown: Count
+        })
+        //console.log(this.state.countDown)
+        if (Count===0){
+          clearInterval(this.interval);
+        }
+    }, 1000);
+  }
+    //console.log("Update sau chụp", this.state.step)
   }
   onClear = () =>{
+    clearTimeout(this.timeout)
+    clearInterval(this.interval)
     this.setState({
       mask: false,
       displayForm: false,
@@ -90,16 +120,18 @@ class App extends Component{
       step : "0",
       isDisplayLoading: false,
       imgResult: '',
-      onBlock : false
+      onBlock : false,
+      countDown : 5
     }) 
   }
   onClickNext = (param) =>{
     // click Ok from dialog
       clearTimeout(this.timeout)
+      clearInterval(this.interval);
       if(this.state.mask){  
-        console.log("click next va co mat na")
+        //console.log("click next va co mat na")
         if(param){
-          console.log(this.state.step)
+          //console.log(this.state.step)
           if(this.state.step==="1"){
           this.setState({
             displayForm: true, // mo from
@@ -108,7 +140,7 @@ class App extends Component{
           })
           this.timeout = setTimeout(() => {
             this.onClear()
-          }, 30000);
+          }, 15000);
         }
           else if(this.state.step==="3"){
             this.setState({
@@ -141,42 +173,75 @@ class App extends Component{
   }
   onInformation = (param) =>{
     clearTimeout(this.timeout)
-   
+    clearInterval(this.interval);
     // recive data from form
     //console.log("Form được submit với nội dung sau" , param)
     if(param){
     callApi('/usr_info', 'POST', param).then(res => {
-        console.log("From server COVID_RESULT :", res.data)
+        //console.log("From server COVID_RESULT :", res.data)
         var status = res.data === "True"?true:false;
         if(status){ // neu phat hien co benh
+        
         this.setState({
             displayForm: false,
             isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
             openLog: true,
             logId: 4,
             step: "3", /// chuyển sang bước 3
-            onBlock : true
+            onBlock : true,
+            countDown: 5
         })
+        let Count = 5
+        
+        this.interval = setInterval(() => {
+            Count--
+            this.setState({
+              countDown: Count
+            })
+            //console.log(this.state.countDown)
+            if (Count===0){
+              clearInterval(this.interval);
+            }
+        }, 1000);
         this.timeout = setTimeout(() => {
           this.onClear()
-        }, 15000);
+        }, 5000);
       }else{
+       
+        this.timeout = setTimeout(() => {
+          this.onClear()
+        }, 5000);
         this.setState({
           displayForm: false,
           isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
           openLog: true,
           logId: 3,
           step: "3", /// chuyển sang bước 3
-          onBlock : true
-        })
+          onBlock: true,
+          countDown: 5
+          })
+          let Count = 5
+        
+          this.interval = setInterval(() => {
+              Count--
+              this.setState({
+                countDown: Count
+              })
+              //console.log(this.state.countDown)
+              if (Count===0){
+                clearInterval(this.interval);
+              }
+          }, 1000);
+        }
       })
+    }
   }
 
-  }
   onCloseForm = () =>{
     this.setState({
       displayForm: false,
       step:"0",
+      isHeath_OK: true,
       imgResult: '',
       onBlock : false
     })
@@ -197,6 +262,7 @@ class App extends Component{
                 onClickNext= {this.onClickNext} 
                 onStep = {this.state.step}
                 id = {this.state.logId}
+                onCountDown = {this.state.countDown}
             />
             <LoadingPage displayLoading = {this.state.isDisplayLoading}/> 
             <FormDialog onInformation = {this.onInformation} 

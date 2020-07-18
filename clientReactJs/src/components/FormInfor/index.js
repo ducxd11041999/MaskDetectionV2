@@ -88,7 +88,7 @@ class FormDialog extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText className = {classes.formContentSize}>
-                            Vui lòng điền thông tin cá nhân của bạn trong 14 ngày gần đây và chắc chắn rằng thông tin bạn cung cấp hoàn toàn chính xác
+                            Vui lòng điền thông tin cá nhân của bạn trong 14 ngày gần đây và chắc chắn thông tin bạn cung cấp hoàn toàn chính xác
                         </DialogContentText>
                                 <TextField
                                     variant = "filled"

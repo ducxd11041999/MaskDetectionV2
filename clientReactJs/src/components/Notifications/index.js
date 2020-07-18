@@ -30,7 +30,7 @@ class Notification extends Component {
     handleClose = (params) => {
         this.props.onClickNext(true)
     };  
-    showLog = (logs, type) =>{
+    showLog = (logs, type, onCountDown) =>{
         var result;
         result = logs.map((log, index) =>{
             if(log.id === type)
@@ -40,6 +40,7 @@ class Notification extends Component {
                         open = {this.props.openLog} 
                         handleClose = {this.handleClose}
                         log = {log}
+                        onCountDown = {onCountDown}
                         />
                     )
                 }
@@ -51,10 +52,10 @@ class Notification extends Component {
 
     render (){
         var {log} = this.state
-        var {id} = this.props
+        var {id, onCountDown} = this.props
         return (
             <div>
-                {this.showLog(log, id)}
+                {this.showLog(log, id, onCountDown)}
             </div>
         );
     }

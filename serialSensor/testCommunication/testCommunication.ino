@@ -21,7 +21,7 @@ void loop() {
       digitalWrite(LED, HIGH);
       //Serial.write("o");
       myservo.write(0);                  // sets the servo position according to the scaled value
-      delay(10000);
+      delay(5000);
     }
     else{
      Serial.write((char)incomingByte);
