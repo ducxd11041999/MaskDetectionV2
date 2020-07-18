@@ -51,7 +51,7 @@ class AlertDialogSlide extends Component {
     return className
   }
   render(){
-      var {open, log, classes} = this.props;
+      var {open, log, classes, onCountDown} = this.props;
       //console.log(open)
       var className = this.styleTitle()
       var icon = this.showIcon(log.id)
@@ -79,7 +79,7 @@ class AlertDialogSlide extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={ () => this.handleClose(true)} className={classes.zoomButton} variant="contained" size = "large" color="secondary">
-              OK
+              OK ({onCountDown})
             </Button>
           </DialogActions>
         </Dialog>

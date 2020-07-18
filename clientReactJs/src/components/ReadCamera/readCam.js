@@ -30,12 +30,12 @@ function WebcamCapture(props) {
         onCap(body)
         
     }, [webcamRef, onCap]);
-    console.log(typeof imgSrc, typeof onImageResult)
+    console.log(typeof imgSrc)
     useEffect(() => {
-      console.log(onBlock)
+      //console.log(onBlock)
       if(!onBlock){
       const interval = setInterval(() => {
-            console.log("captured");
+            //console.log("captured");
             capture();
           }, 2000);
           return () => clearInterval(interval);
