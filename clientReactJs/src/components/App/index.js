@@ -26,7 +26,9 @@ class App extends Component{
       rp: false,
       imgResult: '',
       onBlock: false,
-      countDown: 5
+      countDown: 5,
+      timeFormDisplay: 10000,
+      flagCheckInteractive: false
     };
     this.onCap = this.onCap.bind(this)
   }
@@ -41,6 +43,7 @@ class App extends Component{
           //console.log((res))
           let resultCheck =  res.data.result
           let imgResult = res.data.img
+          console.log(resultCheck)
           if(resultCheck === "None"){
             this.setState({
               mask: false,
@@ -68,7 +71,7 @@ class App extends Component{
         step: "1", // chuyển sang bước 1
         logId: 2, /// Log ra thông báo có khẩu trang
         isDisplayLoading: false,
-        imgResult: imgResult,
+        //imgResult: imgResult,
         countDown : 5
       })
       let Count = 5
@@ -121,7 +124,8 @@ class App extends Component{
       isDisplayLoading: false,
       imgResult: '',
       onBlock : false,
-      countDown : 5
+      countDown : 5,
+      flagCheckInteractive : false
     }) 
   }
   onClickNext = (param) =>{
@@ -132,6 +136,7 @@ class App extends Component{
         //console.log("click next va co mat na")
         if(param){
           //console.log(this.state.step)
+          //console.log("wait")
           if(this.state.step==="1"){
           this.setState({
             displayForm: true, // mo from
@@ -140,7 +145,7 @@ class App extends Component{
           })
           this.timeout = setTimeout(() => {
             this.onClear()
-          }, 15000);
+          }, this.state.timeFormDisplay);
         }
           else if(this.state.step==="3"){
             this.setState({
@@ -206,8 +211,7 @@ class App extends Component{
         this.timeout = setTimeout(() => {
           this.onClear()
         }, 5000);
-      }else{
-       
+      }else{      
         this.timeout = setTimeout(() => {
           this.onClear()
         }, 5000);
@@ -236,7 +240,16 @@ class App extends Component{
       })
     }
   }
-
+  onChangeFlag = (param) => {
+    this.setState({
+      step: "1"
+    })
+    //console.log(this.state.step)
+    if(this.state.step === "1"){
+      //console.log("goi lai ham")
+      this.onClickNext("1");
+    }
+  }
   onCloseForm = () =>{
     this.setState({
       displayForm: false,
@@ -251,6 +264,7 @@ class App extends Component{
         <LoadingPage displayLoading = {this.state.isDisplayLoading}/> 
     )
   }
+
   render(){
     let {classes} = this.props
     return (
@@ -268,7 +282,9 @@ class App extends Component{
             <FormDialog onInformation = {this.onInformation} 
               openForm = {this.state.displayForm}
               onStep = {this.state.step}
-              onCloseForm = {this.onCloseForm}/>
+              onCloseForm = {this.onCloseForm}
+              onChangeFlag = {this.onChangeFlag}
+              />
             <ReadCamera onCap = {this.onCap} 
                 onStep={this.state.step} 
                 onReplay = {this.state.rp} 

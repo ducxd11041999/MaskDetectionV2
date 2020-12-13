@@ -30,7 +30,7 @@ function WebcamCapture(props) {
         onCap(body)
         
     }, [webcamRef, onCap]);
-    console.log(typeof imgSrc)
+    //console.log(typeof imgSrc)
     useEffect(() => {
       //console.log(onBlock)
       if(!onBlock){

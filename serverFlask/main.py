@@ -13,6 +13,7 @@ from io import BytesIO
 import traceback
 from flask_cors import CORS, cross_origin
 from flask import Flask, request, render_template, redirect, url_for, send_from_directory, make_response,send_file,jsonify
+from flask_socketio import SocketIO, emit, send
 import base64
 import detectModules.detect_mask_image as detect_mask_image
 from db import *
@@ -24,7 +25,8 @@ app.config['SECRET_KEY'] = 'hard to guess string'
 app.config['UPLOAD_FOLDER'] = 'data/'
 app.config['THUMBNAIL_FOLDER'] = 'data/thumbnail/'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
-
+app.config['SECRET_KEY'] = 'secret'
+socketio = SocketIO(app, cors_allowed_origins='*')
 ALLOWED_EXTENSIONS = set(['txt', 'gif', 'png', 'jpg', 'jpeg', 'bmp', 'rar', 'zip', '7zip', 'doc', 'docx'])
 IGNORED_FILES = set(['.gitignore'])
 
@@ -76,7 +78,7 @@ def img_upload():
         rgb_im = im.convert('RGB')
         rgb_im.save('../detectModules/screen/image.jpg')
         image, result = detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/screen/image.jpg'), 0.5, show_output=False)
-
+        print(result)
         #print((image))
         if(image is not None):
             # print("OK")
@@ -118,15 +120,18 @@ def img_upload():
     return render_template('index.html', status = result)
 
 @app.route('/usr_info', methods=['POST', 'GET'])
+@socketio.on('my event')
 @cross_origin()
 def info_upload():
     if (request.method == 'POST'):
         res = request.get_json()
         #print(res)
         if (res["cough"] or res["headache"] or res["breath"] or res["tangent"] or res["tire"] or res["fever"] or res["travel"]):
+            print("Covid")
             covid_result = 1
         else:
             covid_result = 0
+            print("NoCovid")
         #heath_dtls = res["heath_dtls"]
         name = res["name"]
         ages = res["ages"]
@@ -145,18 +150,16 @@ def info_upload():
         if (covid_result == 1):
             #print("Co benh")
             #send_data("c", serialcomm)
-            
             return escape(True)
         else:
             #print("Cua da mo khoa")
             #send_data("o", serialcomm)
-            serialcomm = setup('COM9', 19200, 1)
-            send_data("o", serialcomm)
+            # serialcomm = setup('COM9', 19200, 1)
+            # send_data("o", serialcomm)
+            socketio.emit("myresponse", {'data': 'open'}, namespace="/chat")
             return escape(False)
     else:
         return True
 
-
-
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0',debug=True)
+    socketio.run(app.run(host = '0.0.0.0',debug=True))

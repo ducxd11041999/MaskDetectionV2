@@ -30,7 +30,8 @@ class FormDialog extends Component {
             tangent: false,
             travel: false,
             fever: false,
-            tire:false
+            tire:false,
+            flagChange: false
         };
     }
     onClearData = () =>{
@@ -43,7 +44,8 @@ class FormDialog extends Component {
             cough: false,
             headache: false,
             breath: false,
-            tangent: false
+            tangent: false,
+            flagChange: false
         });
         this.handleClose();
     }
@@ -55,6 +57,7 @@ class FormDialog extends Component {
         var target = event.target
         var name = target.name
         var value = target.value
+        this.props.onChangeFlag(true)
         //console.log(name + " " + value)
         //console.log(typeof value)
         if (name ==='cough' || name === 'breath' || name === 'headache' || name === 'tangent')
@@ -112,7 +115,7 @@ class FormDialog extends Component {
                                     margin="dense"
                                     name="ages"
                                     type="text"
-                                    label ="Tuổi"
+                                    label ="Số điện thoại"
                                     value = {this.state.ages}
                                     onChange = {this.onChange}
                                     inputProps={{
