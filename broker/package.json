@@ -1,0 +1,22 @@
+{
+  "name": "broker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ducxd11041999/FresherAnttizen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ducxd11041999/FresherAnttizen/issues"
+  },
+  "homepage": "https://github.com/ducxd11041999/FresherAnttizen#readme",
+  "dependencies": {
+    "mosca": "^2.8.3"
+  }
+}

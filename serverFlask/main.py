@@ -19,6 +19,18 @@ import detectModules.detect_mask_image as detect_mask_image
 from db import *
 from pySerialDriver import *
 import json
+import random
+import time
+from paho.mqtt import client as mqtt_client
+
+broker = '192.168.137.1'
+port = 1883
+client = None
+topic = "/python/mqtt"
+# generate client ID with pub prefix randomly
+client_id = f'python-mqtt-{random.randint(0, 1000)}'
+
+
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -47,6 +59,46 @@ drop_tables(conn, "users")
 #create new db users
 create_table_user(conn)
 
+
+
+def on_message(client, userdata, message):
+    print("message received " ,str(message.payload.decode("utf-8")))
+    print("message topic=",message.topic)
+    print("message qos=",message.qos)
+    print("message retain flag=",message.retain)
+
+def connect_mqtt():
+    def on_connect(client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+            #client.on_message=on_message
+            #client.subscribe("outTopic")
+        else:
+            print("Failed to connect, return code %d\n", rc)
+
+    client = mqtt_client.Client(client_id)
+    client.on_connect = on_connect
+    client.connect(broker, port)
+    return client
+
+
+
+
+def publish(client, argmsg):
+    msg = argmsg
+    print("call ham call ham")
+    result = client.publish(topic, msg)
+    # result: [0, 1]
+    status = result[0]
+    if status == 0:
+        print(f"Send `{msg}` to topic `{topic}`")
+    else:
+        print(f"Failed to send message to topic {topic}")
+
+
+client = connect_mqtt()
+client.loop_start()
+publish(client, 0)
 
 
 @app.route('/run/<command>')
@@ -125,6 +177,11 @@ def img_upload():
 def info_upload():
     if (request.method == 'POST'):
         res = request.get_json()
+        name = res["name"]
+        ages = res["ages"]
+        #connect drivers
+        if((name == '')):
+            covid_result = 1
         #print(res)
         if (res["cough"] or res["headache"] or res["breath"] or res["tangent"] or res["tire"] or res["fever"] or res["travel"]):
             print("Covid")
@@ -133,33 +190,31 @@ def info_upload():
             covid_result = 0
             print("NoCovid")
         #heath_dtls = res["heath_dtls"]
-        name = res["name"]
-        ages = res["ages"]
-        #connect drivers
-        
+
         # save data into database
         data = [name, ages, covid_result]
         insert_data(conn, data)
         #data_user = view_db(conn, "users")
         #print (data_user)
         #print(data)
-        if((name == '')):
-            return escape(True) # mac dinh khong mo cua
         #print(res)
         #check no data
         if (covid_result == 1):
             #print("Co benh")
             #send_data("c", serialcomm)
+            client.loop_start()
+            publish(client, 0)
             return escape(True)
         else:
             #print("Cua da mo khoa")
             #send_data("o", serialcomm)
             # serialcomm = setup('COM9', 19200, 1)
-            # send_data("o", serialcomm)
-            socketio.emit("myresponse", {'data': 'open'}, namespace="/chat")
+            # send_data("o", serialcomm)      
+            client.loop_start()
+            publish(client, 1)
             return escape(False)
     else:
         return True
 
 if __name__ == '__main__':
-    socketio.run(app.run(host = '0.0.0.0',debug=True))
+    app.run(host = '192.168.137.1',debug=False)
