@@ -21,8 +21,10 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <Servo.h>
+#define BUZZER 14
 Servo myservo;  // create servo object to control a servo
 // Update these with values suitable for your network.
+
 
 const char* ssid = "DHK";
 const char* password = "dunghoakhuong123";
@@ -72,14 +74,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   if(rev == '1'){
     digitalWrite(BUILTIN_LED, LOW);
-    myservo.write(90);
+    myservo.write(0);
+    digitalWrite(BUZZER, LOW);
     delay(5000);
     Serial.print("Open");
   }
   else{
     digitalWrite(BUILTIN_LED, HIGH);
     //delay(1000);
-    myservo.write(0);
+    myservo.write(90);
+    digitalWrite(BUZZER, HIGH);
     delay(5000);
     Serial.print("Close");
   }
@@ -112,12 +116,13 @@ void reconnect() {
 
 void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
+  pinMode(BUZZER, OUTPUT);
   Serial.begin(115200);
   myservo.attach(12);  // attaches the servo on pin 9 to the servo object
   setup_wifi();
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
-  myservo.write(0);
+  myservo.write(90);
 }
 
 void loop() {
@@ -126,7 +131,8 @@ void loop() {
     reconnect();
   }
   //digitalWrite(BUILTIN_LED, HIGH);
-   myservo.write(0);
+  myservo.write(90);
+  digitalWrite(BUZZER, LOW);
   client.loop();
 
 //  unsigned long now = millis();

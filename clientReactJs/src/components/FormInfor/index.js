@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { render } from "react-dom";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -12,8 +13,13 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import { withStyles } from '@material-ui/core';
 import styles from './Style'
 import Checkbox from '@material-ui/core/Checkbox';
-
-class FormDialog extends Component {
+import Keyboard from 'react-simple-keyboard';
+import 'simple-keyboard/build/css/index.css';
+function corrector(value) {
+    console.log(`correction ${value}`);
+    this.makeCorrection(value);
+}
+class FormDialog extends React.Component {
 
     constructor(props) {
         super(props);
@@ -31,7 +37,10 @@ class FormDialog extends Component {
             travel: false,
             fever: false,
             tire:false,
-            flagChange: false
+            flagChange: false,
+            layoutName: "default",
+            value: "",
+            open2: false 
         };
     }
     onClearData = () =>{
@@ -75,8 +84,93 @@ class FormDialog extends Component {
         this.props.onInformation(this.state)
         this.onClearData();
     }
+
+    onInputChanged = (data) => {
+        this.setState({ input: data });
+    }
+    onInputSubmitted = (data) => {
+        console.log("Input submitted:", data);
+    }
+    canOpenKeyboard = () => {
+        return true;
+    }
+ 
+    handleFocus = () =>{
+        if(this.canOpenKeyboard()) {
+            this.setState({ open2: true });
+        }
+    }
+    
+    handleChange= (value) => {
+        console.log(value);
+        this.setState({ value: value });
+    }
+    
+    handleRequestClose= () => {
+        this.setState({ open2: false });
+    }
+    
+    handleInput= (input) => {
+        console.log(input);
+        var name = 'name'
+        this.setState(
+            {
+                [name]: input
+            })
+    }
+    
+    handleError = (error) => {
+        let errorText;
+        switch (error) {
+            case 'required':
+                errorText = 'This field is required';
+                break;
+            case 'invalidSymbol':
+                errorText = 'You are tring to enter none number symbol';
+                break;
+            case 'incompleteNumber':
+                errorText = 'Number is incomplete';
+                break;
+            case 'singleMinus':
+                errorText = 'Minus can be use only for negativity';
+                break;
+            case 'singleFloatingPoint':
+                errorText = 'There is already a floating point';
+                break;
+            case 'singleZero':
+                errorText = 'Floating point is expected';
+                break;
+            case 'min':
+                errorText = 'You are tring to enter number less than -10';
+                break;
+            case 'max':
+                errorText = 'You are tring to enter number greater than 12';
+                break;
+        }
+        this.setState({ errorText: errorText });
+    }
+    
+    handleValid= (value) => {
+        console.debug(`valid ${value}`);
+    }
+ 
+    // componentDidMount() {
+    //     setTimeout(() => this.setState({ value: '89' }), 1000);
+    // }
+    onChange2 = (input) => {
+        //console.log("Input changed", input);
+        this.setState(
+            {
+                name:input
+            })
+    }
+    
+    onKeyPress = (button) => {
+        console.log("Button pressed", button);
+    }
     render(){
         const {openForm, classes} = this.props
+        // let Keyboard = new Keyboard
     return (
         <div>
             <Dialog open={openForm} onClose={this.handleClose}  
@@ -86,7 +180,7 @@ class FormDialog extends Component {
                 <form className={classes.root} autoComplete="off">
                     <DialogTitle id="form-dialog-title" >
                         <div className={classes.formTitleSize}>
-                            Thông tin cá nhân
+                            KHAI BÁO Y TẾ
                         </div>
                     </DialogTitle>
                     <DialogContent>
@@ -107,8 +201,13 @@ class FormDialog extends Component {
                                         style: {fontSize: "15px"} 
                                     }}
                                     InputLabelProps={{style: {fontSize: "15px"}}} // font size of input label
-                                    required
+                                    required           
                                 />
+                                {/* <Keyboard
+                                    name='name'
+                                    onChange={input =>this.onChange2(input)}
+                                    onKeyPress={button => this.onKeyPress(button)}  
+                                /> */}
                                 <TextField
                                     variant = "filled"
                                     autoFocus
@@ -215,7 +314,7 @@ class FormDialog extends Component {
                             value = {!this.state.travel}
                             label={<span style={{ fontSize: '15px' }}>Đã từng di chuyển qua nơi có dịch</span>}
                         />
-                        <br />
+                        <br /> 
                     </DialogContent>
                     <DialogActions>
                         <Button variant = "contained" type="reset"  className = {classes.zoomButton} onClick={this.onClearData} color="primary">
@@ -231,4 +330,5 @@ class FormDialog extends Component {
     );
     }
 }
+
 export default withStyles(styles)(FormDialog)

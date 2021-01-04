@@ -9,7 +9,9 @@ import LoadingPage from './../LoadingPage/index.js'
 //import Stream from './../StreamVideo/index'
 import ReadCamera from './../ReadCamera/index'
 import FormDialog from './../FormInfor/index'
+import Demo from './../FormInfor/testkeyboard'
 import callApi from './../../utils/Call_api'
+import showStatus from './../../utils/getdoor'
 class App extends Component{
   constructor(props) {
       super(props);
@@ -64,18 +66,69 @@ class App extends Component{
     this.timeout = setTimeout(() => {
       this.onClear()
     }, 5000);
-    if(resultCheck){
+  /*============================================================haveform================================================*/
+  //   if(resultCheck){
+  //     this.setState({
+  //       mask: resultCheck, /// update lai co khau trang khong
+  //       openLog: true, // mo thong báo
+  //       step: "1", // chuyển sang bước 1
+  //       logId: 2, /// Log ra thông báo có khẩu trang
+  //       isDisplayLoading: false,
+  //       //imgResult: imgResult,
+  //       countDown : 5
+  //     })
+  //     let Count = 5
+  //     clearInterval(this.interval);
+  //     this.interval = setInterval(() => {
+  //         Count--
+  //         this.setState({
+  //           countDown: Count
+  //         })
+  //         //console.log(this.state.countDown)
+  //         if (Count===0){
+  //           clearInterval(this.interval);
+  //         }
+  //     }, 1000);
+  //   }
+  //   else{
+  //     this.setState({
+  //       mask: resultCheck, /// update lai co khau trang khong
+  //       openLog: true, /// mo thong bao
+  //       step: "0", /// Chuyển về lại bước 0
+  //       logId: 1, // log ra warning
+  //       isDisplayLoading: false,
+  //       imgResult: imgResult,
+  //       countDown: 5
+  //   })
+  //   let Count = 5
+  //   clearInterval(this.interval);
+  //   this.interval = setInterval(() => {
+  //       Count--
+  //       this.setState({
+  //         countDown: Count
+  //       })
+  //       //console.log(this.state.countDown)
+  //       if (Count===0){
+  //         clearInterval(this.interval);
+  //       }
+  //   }, 1000);
+  // }
+    //console.log("Update sau chụp", this.state.step)
+    /*===================================================end-have-form=======================================*/
+    /*==================================================optimize====================================*/
+    let status = !resultCheck
+    if(status){
       this.setState({
-        mask: resultCheck, /// update lai co khau trang khong
-        openLog: true, // mo thong báo
-        step: "1", // chuyển sang bước 1
-        logId: 2, /// Log ra thông báo có khẩu trang
-        isDisplayLoading: false,
-        //imgResult: imgResult,
-        countDown : 5
+          displayForm: false,
+          isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
+          openLog: true,
+          logId: 4,
+          step: "3", /// chuyển sang bước 3
+          onBlock : true,
+          countDown: 5
       })
       let Count = 5
-      clearInterval(this.interval);
+      
       this.interval = setInterval(() => {
           Count--
           this.setState({
@@ -86,31 +139,39 @@ class App extends Component{
             clearInterval(this.interval);
           }
       }, 1000);
-    }
-    else{
+      this.timeout = setTimeout(() => {
+        this.onClear()
+      }, 5000);
+    }else{    
+      showStatus('/makerthon/API/getDoor.php', 'POST', 'door=open&rfid=1233322').then(res => {
+        console.log('post status door')
+      })
+      this.timeout = setTimeout(() => {
+        this.onClear()
+      }, 5000);
       this.setState({
-        mask: resultCheck, /// update lai co khau trang khong
-        openLog: true, /// mo thong bao
-        step: "0", /// Chuyển về lại bước 0
-        logId: 1, // log ra warning
-        isDisplayLoading: false,
-        imgResult: imgResult,
+        displayForm: false,
+        isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
+        openLog: true,
+        logId: 3,
+        step: "3", /// chuyển sang bước 3
+        onBlock: true,
         countDown: 5
-    })
-    let Count = 5
-    clearInterval(this.interval);
-    this.interval = setInterval(() => {
-        Count--
-        this.setState({
-          countDown: Count
         })
-        //console.log(this.state.countDown)
-        if (Count===0){
-          clearInterval(this.interval);
-        }
-    }, 1000);
-  }
-    //console.log("Update sau chụp", this.state.step)
+        let Count = 5
+      
+        this.interval = setInterval(() => {
+            Count--
+            this.setState({
+              countDown: Count
+            })
+            //console.log(this.state.countDown)
+            if (Count===0){
+              clearInterval(this.interval);
+            }
+        }, 1000);
+      }
+      /*============================================end optimize============================================*/
   }
   onClear = () =>{
     clearTimeout(this.timeout)
@@ -185,58 +246,63 @@ class App extends Component{
     callApi('/usr_info', 'POST', param).then(res => {
         //console.log("From server COVID_RESULT :", res.data)
         var status = res.data === "True"?true:false;
-        if(status){ // neu phat hien co benh
+      //   if(status){ // neu phat hien co benh
+      //   // showStatus('/makerthon/API/getDoor.php', 'POST', 'door=close&rfid=12333').then(res => {
+      //   //     console.log('post status door')
+      //   // })
+      //   this.setState({
+      //       displayForm: false,
+      //       isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
+      //       openLog: true,
+      //       logId: 4,
+      //       step: "3", /// chuyển sang bước 3
+      //       onBlock : true,
+      //       countDown: 5
+      //   })
+      //   let Count = 5
         
-        this.setState({
-            displayForm: false,
-            isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
-            openLog: true,
-            logId: 4,
-            step: "3", /// chuyển sang bước 3
-            onBlock : true,
-            countDown: 5
-        })
-        let Count = 5
+      //   this.interval = setInterval(() => {
+      //       Count--
+      //       this.setState({
+      //         countDown: Count
+      //       })
+      //       //console.log(this.state.countDown)
+      //       if (Count===0){
+      //         clearInterval(this.interval);
+      //       }
+      //   }, 1000);
+      //   this.timeout = setTimeout(() => {
+      //     this.onClear()
+      //   }, 5000);
+      // }else{    
+      //   showStatus('/makerthon/API/getDoor.php', 'POST', 'door=open&rfid=1233322').then(res => {
+      //     console.log('post status door')
+      //   })
+      //   this.timeout = setTimeout(() => {
+      //     this.onClear()
+      //   }, 5000);
+      //   this.setState({
+      //     displayForm: false,
+      //     isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
+      //     openLog: true,
+      //     logId: 3,
+      //     step: "3", /// chuyển sang bước 3
+      //     onBlock: true,
+      //     countDown: 5
+      //     })
+      //     let Count = 5
         
-        this.interval = setInterval(() => {
-            Count--
-            this.setState({
-              countDown: Count
-            })
-            //console.log(this.state.countDown)
-            if (Count===0){
-              clearInterval(this.interval);
-            }
-        }, 1000);
-        this.timeout = setTimeout(() => {
-          this.onClear()
-        }, 5000);
-      }else{      
-        this.timeout = setTimeout(() => {
-          this.onClear()
-        }, 5000);
-        this.setState({
-          displayForm: false,
-          isHeath_OK: status,  /// chuyển status có bệnh không của user, True có , false không
-          openLog: true,
-          logId: 3,
-          step: "3", /// chuyển sang bước 3
-          onBlock: true,
-          countDown: 5
-          })
-          let Count = 5
-        
-          this.interval = setInterval(() => {
-              Count--
-              this.setState({
-                countDown: Count
-              })
-              //console.log(this.state.countDown)
-              if (Count===0){
-                clearInterval(this.interval);
-              }
-          }, 1000);
-        }
+      //     this.interval = setInterval(() => {
+      //         Count--
+      //         this.setState({
+      //           countDown: Count
+      //         })
+      //         //console.log(this.state.countDown)
+      //         if (Count===0){
+      //           clearInterval(this.interval);
+      //         }
+      //     }, 1000);
+      //   }
       })
     }
   }
@@ -271,6 +337,7 @@ class App extends Component{
       <ThemeProvider theme = {theme}>
         <div className = {classes.noCroll} ref={this.wrapper}>
           <div>
+            {/* <Demo/> */}
             <Notification openLog = {this.state.openLog}
                 onHeath = {this.state.isHeath_OK}
                 onClickNext= {this.onClickNext} 
@@ -281,6 +348,7 @@ class App extends Component{
             <LoadingPage displayLoading = {this.state.isDisplayLoading}/> 
             <FormDialog onInformation = {this.onInformation} 
               openForm = {this.state.displayForm}
+              //openForm = {true}
               onStep = {this.state.step}
               onCloseForm = {this.onCloseForm}
               onChangeFlag = {this.onChangeFlag}

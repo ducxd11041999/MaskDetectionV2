@@ -31,6 +31,8 @@ topic = "/python/mqtt"
 client_id = f'python-mqtt-{random.randint(0, 1000)}'
 
 
+global RFID
+
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -86,7 +88,7 @@ def connect_mqtt():
 
 def publish(client, argmsg):
     msg = argmsg
-    print("call ham call ham")
+    #print("call ham call ham")
     result = client.publish(topic, msg)
     # result: [0, 1]
     status = result[0]
@@ -112,9 +114,26 @@ def run(command):
 def handle():
     detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/avt.jpg'), 0.5, show_output=True)
 
+@app.route('/card', methods=['POST'])
+@cross_origin()
+def card_upload():
+    global RFID
+    req = request.form['rfid']
+    if req == '18624317226' or req == '2081819750' or req == '2026516525':
+        print(req)
+        RFID = True
+        client.loop_start()
+        publish(client, 1)
+        return escape(RFID)
+    RFID = False
+    client.loop_start()
+    publish(client, 0)
+    return escape(RFID)
+
 @app.route('/json', methods=['POST', 'GET'])
 @cross_origin()
 def img_upload():
+    
     if request.method == 'POST':
         req = request.get_json()
         #print('req' , (req["img"]))
@@ -132,7 +151,7 @@ def img_upload():
         image, result = detect_mask_image.run(graph, sess, model, net , os.path.abspath('../detectModules/screen/image.jpg'), 0.5, show_output=False)
         print(result)
         #print((image))
-        if(image is not None):
+        if(result is not None):
             # print("OK")
             # img_w, img_h = 200, 200
             # data = np.zeros((img_h, img_w, 3), dtype=np.uint8)
@@ -164,6 +183,15 @@ def img_upload():
                 encoded_string = base64.b64encode(image_file.read())
             return_data = {"result" : result, "img":encoded_string}
             # return  '{},{}'.format(result,encoded_string)
+            if(result != "None"):
+                if(result is True):
+                    client.loop_start()
+                    publish(client, 1)
+                else:
+                    client.loop_start()
+                    publish(client, 0)
+            else:
+                print("None")
             return jsonify(return_data)
         else:
             print("Not file return")
@@ -181,14 +209,18 @@ def info_upload():
         ages = res["ages"]
         #connect drivers
         if((name == '')):
+            #print("Enter")
             covid_result = 1
+            client.loop_start()
+            publish(client, 0)
+            return escape(True)
         #print(res)
         if (res["cough"] or res["headache"] or res["breath"] or res["tangent"] or res["tire"] or res["fever"] or res["travel"]):
-            print("Covid")
+            #print("Covid")
             covid_result = 1
         else:
             covid_result = 0
-            print("NoCovid")
+            #print("NoCovid")
         #heath_dtls = res["heath_dtls"]
 
         # save data into database
@@ -214,7 +246,6 @@ def info_upload():
             publish(client, 1)
             return escape(False)
     else:
-        return True
-
+        return escape(True)
 if __name__ == '__main__':
-    app.run(host = '192.168.137.1',debug=False)
+    app.run(host = '192.168.137.1', debug=False)

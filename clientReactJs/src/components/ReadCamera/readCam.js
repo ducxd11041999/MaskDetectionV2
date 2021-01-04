@@ -1,6 +1,7 @@
 import Webcam from "react-webcam";
 import React, {useEffect} from 'react'
 import videoConstraints from './Setting'
+
 //import Button from '@material-ui/core/Button';
 // import callApi from './../../utils/Call_api'
 import PropTypes from 'prop-types';
@@ -58,8 +59,8 @@ function WebcamCapture(props) {
             <Webcam
               audio={false}
               ref={webcamRef}
-              minScreenshotHeight	={650}
-              minScreenshotWidth={1500}
+              minScreenshotHeight	={props.deviceH}
+              minScreenshotWidth={props.deviceW}
               screenshotFormat="image/png"
               videoConstraints={videoConstraints}
             >

@@ -23,7 +23,6 @@ export default async function callApi(endpoint, method = 'GET', body){
     }
 }
 
-
 export function makePostRequest(path, data) { 
     return new Promise(function (resolve, reject) { 
         axios.post(path, data).then( 

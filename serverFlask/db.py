@@ -48,7 +48,7 @@ if __name__ == '__main__':
     conn = create_connection()
     drop_tables(conn, "users")
     create_table_user(conn)
-    data = ['duc', '21', 1 ]
+    data = ['duc', '0707387516', 1 ]
     print(data[2])
     insert_data(conn, data)
     print(view_db(conn, "users"))
