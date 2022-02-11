@@ -21,7 +21,7 @@
     "js-base64": "^2.5.2",
     "material-ui": "^0.20.2",
     "material-ui-number-input": "^5.0.24",
-    "node-sass": "^5.0.0",
+    "node-sass": "^7.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-material-ui-keyboard": "^6.2.1",
